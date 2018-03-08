@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 765aa6d0f28b2be4e8f092ea85f74278, type: 3}
+  m_Name: New Deed Template Library
+  m_EditorClassIdentifier: 
+  factionDatabase: {fileID: 11400000, guid: c5a7ed5cba8d1d74bb8caa210e2865c4, type: 2}
+  deedTemplates:
+  - tag: flatter
+    description: 
+    impact: 20
+    aggression: -100
+    traits:
+    - -100
+    - 10
+    - -30
+    - 30
+    - 30
+    - 0
+    requiresSight: 0
+    radius: 0
+  - tag: insult
+    description: 
+    impact: 30
+    aggression: 50
+    traits:
+    - 50
+    - -70
+    - 0
+    - 30
+    - 30
+    - -40
+    requiresSight: 0
+    radius: 0
+  - tag: disappointed
+    description: 
+    impact: 10
+    aggression: -20
+    traits:
+    - -10
+    - -5
+    - 20
+    - 0
+    - 60
+    - 0
+    requiresSight: 0
+    radius: 0
