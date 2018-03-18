@@ -91,12 +91,12 @@ MonoBehaviour:
     color: 0
     parents: 02000000
     traits:
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
+    - 30
+    - 4
+    - 5
+    - 5
+    - 5
+    - 5
     relationships:
     - factionID: 5
       inheritable: 1

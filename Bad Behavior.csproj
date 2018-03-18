@@ -829,6 +829,7 @@
     <Compile Include="Assets\FungusExamples\FungusLua\Bindings\CustomScript.cs" />
     <Compile Include="Assets\FungusExamples\MonoBehEvents\SpriteColorChangeFromFungusMouseEvent.cs" />
     <Compile Include="Assets\scripts\Deeds.cs" />
+    <Compile Include="Assets\scripts\maxRelationshipCheck.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Fungus\Docs\CHANGELOG.txt" />
