@@ -6,37 +6,37 @@ public class RPGDefaultStats : RPGStatCollection
 {
     protected override void ConfigureStats()
     {
-        RPGStat health = CreateOrGetStat(RPGStatType.Health);
+        var health = CreateOrGetStat<RPGStatModifiable>(RPGStatType.Health);
         health.StatName = "Health";
-        health.StatValue = 100;
+        health.StatBaseValue = 100;
 
-        RPGStat mana = CreateOrGetStat(RPGStatType.Mana);
-        mana.StatName = "Mana";
-        mana.StatValue = 100;
-
-        RPGStat attack = CreateOrGetStat(RPGStatType.Attack);
+        var attack = CreateOrGetStat<RPGStatModifiable>(RPGStatType.Attack);
         attack.StatName = "Attack";
-        attack.StatValue = 1;
+        attack.StatBaseValue = 1;
 
-        RPGStat will = CreateOrGetStat(RPGStatType.Will);
+        var will = CreateOrGetStat<RPGStatModifiable>(RPGStatType.Will);
         will.StatName = "Will";
-        will.StatValue = 1;
+        will.StatBaseValue = 1;
 
-        RPGStat defense = CreateOrGetStat(RPGStatType.Defense);
+        var defense = CreateOrGetStat<RPGStatModifiable>(RPGStatType.Defense);
         defense.StatName = "Defense";
-        defense.StatValue = 1;
+        defense.StatBaseValue = 1;
 
-        RPGStat dexterity = CreateOrGetStat(RPGStatType.Dexterity);
+        var dexterity = CreateOrGetStat<RPGStatModifiable>(RPGStatType.Dexterity);
         dexterity.StatName = "Dexterity";
-        dexterity.StatValue = 1;
+        dexterity.StatBaseValue = 1;
 
-        RPGStat speed = CreateOrGetStat(RPGStatType.Speed);
+        var speed = CreateOrGetStat<RPGStatModifiable>(RPGStatType.Speed);
         speed.StatName = "Speed";
-        speed.StatValue = dexterity.StatValue;
+        speed.StatBaseValue = dexterity.StatValue;
 
-        RPGStat evasion = CreateOrGetStat(RPGStatType.Evasion);
+        var evasion = CreateOrGetStat<RPGStatModifiable>(RPGStatType.Evasion);
         evasion.StatName = "Evasion";
-        evasion.StatValue = dexterity.StatValue * 10;
+        evasion.StatBaseValue = dexterity.StatValue * 10;
+
+        var mana = CreateOrGetStat<RPGStatModifiable>(RPGStatType.Mana);
+        mana.StatName = "Mana";
+        mana.StatBaseValue = will.StatValue * 10;
     }
 
 }

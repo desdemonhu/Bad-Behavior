@@ -30,19 +30,24 @@ public class RPGStatCollection {
         return null;
     }
 
-    protected RPGStat CreateStat(RPGStatType statType)
+    public T GetStat<T>(RPGStatType type) where T: RPGStat
     {
-        RPGStat stat = new RPGStat();
+        return GetStat(type) as T;
+    }
+
+    protected T CreateStat<T>(RPGStatType statType) where T: RPGStat 
+    {
+        T stat = System.Activator.CreateInstance<T>();
         _statDict.Add(statType, stat);
         return stat;
     }
 
-    protected RPGStat CreateOrGetStat(RPGStatType statType)
+    protected T CreateOrGetStat<T>(RPGStatType statType) where T : RPGStat
     {
-        RPGStat stat = GetStat(statType);
+        T stat = GetStat<T>(statType);
         if (stat == null)
         {
-            stat = CreateStat(statType);
+            stat = CreateStat<T>(statType);
         }
         return stat;
     }

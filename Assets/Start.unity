@@ -125,8 +125,6 @@ GameObject:
   - component: {fileID: 44610539}
   - component: {fileID: 44610541}
   - component: {fileID: 44610540}
-  - component: {fileID: 44610544}
-  - component: {fileID: 44610542}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -270,28 +268,6 @@ MonoBehaviour:
   dimension: 0
   deedTemplateLibrary: {fileID: 11400000, guid: 4156d4596f4a6f040af7b1ba49d874e0,
     type: 2}
---- !u!114 &44610542
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 44610536}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 971332b8c3894624aa30042be2b66743, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &44610544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 44610536}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08c38f7da48df834c9e5cfb5dfe0fcf5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &48459495
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RPGStat {
-
+public class RPGStat
+{
     private string _statName;
-    private int _statValue;
+    private int _statBaseValue;
 
     public string StatName
     {
@@ -13,21 +13,26 @@ public class RPGStat {
         set { _statName = value; }
     }
 
-    public int StatValue
+    public virtual int StatValue
     {
-        get { return _statValue; }
-        set { _statValue = value; }
+        get { return StatBaseValue; }
+    }
+
+    public virtual int StatBaseValue
+    {
+        get { return _statBaseValue; }
+        set { _statBaseValue = value; }
     }
 
     public RPGStat()
     {
         this.StatName = string.Empty;
-        this.StatValue = 0;
+        this.StatBaseValue = 0;
     }
 
     public RPGStat(string name, int value)
     {
         this.StatName = name;
-        this.StatValue = value;
+        this.StatBaseValue = value;
     }
 }
