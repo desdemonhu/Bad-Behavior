@@ -5,11 +5,15 @@ using UnityEngine;
 
 public class RPGStatTests : MonoBehaviour {
     private RPGStatCollection stats;
+    private RPGVital health;
 
     // Use this for initialization
     void Start()
     {
         stats = new RPGDefaultStats();
+        health = stats.GetStat<RPGVital>(RPGStatType.Health);
+        health.OnCurrentValueChange += OnStatValueChange;
+
         DisplayStatValues();
         Debug.Log(string.Format("_____________________"));
         HealthTest();
@@ -23,8 +27,16 @@ public class RPGStatTests : MonoBehaviour {
             RPGStat stat = stats.GetStat((RPGStatType)statType);
             if (stat != null)
             {
-                Debug.Log(string.Format("Stat {0}'s value is {1}",
-                    stat.StatName, stat.StatValue));
+                RPGVital vital = stat as RPGVital;
+                if(vital != null)
+                {
+                    Debug.Log(string.Format("Stat {0}'s value is {1}/{2}", stat.StatName, vital.StatCurrentValue, stat.StatValue));
+                }
+                else
+                {
+                    Debug.Log(string.Format("Stat {0}'s value is {1}", stat.StatName, stat.StatValue));
+                }
+
             }
         });
     }
@@ -41,12 +53,27 @@ public class RPGStatTests : MonoBehaviour {
         }
     }
 
+    void OnStatValueChange(object sender, EventArgs args)
+    {
+        RPGVital vital = (RPGVital)sender;
+        if(vital != null)
+        {
+            Debug.Log(string.Format("Vital {0} OnStatValueChange event was triggered", vital.StatName));
+        }
+    }
+
     private void HealthTest()
     {
-        var health = stats.GetStat<RPGStatModifiable>(RPGStatType.Health);
         health.AddModifiers(new RPGStatModifier(RPGStatType.Health, RPGStatModifier.Types.BaseValueAdd, 50f));
         health.AddModifiers(new RPGStatModifier(RPGStatType.Health, RPGStatModifier.Types.BaseValuePercent, 1.0f));
         health.UpdateModifiers();
+
+        var attack = stats.GetStat<RPGAttribute>(RPGStatType.Attack);
+        attack.ScaleStat(16);
+        var dexterity = stats.GetStat<RPGAttribute>(RPGStatType.Dexterity);
+        dexterity.ScaleStat(16);
+
+        health.StatCurrentValue = health.StatValue - 75;
     }
 
 }
