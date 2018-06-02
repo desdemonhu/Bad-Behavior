@@ -64,8 +64,10 @@ public class RPGStatTests : MonoBehaviour {
 
     private void HealthTest()
     {
-        health.AddModifiers(new RPGStatModifier(RPGStatType.Health, RPGStatModifier.Types.BaseValueAdd, 50f));
-        health.AddModifiers(new RPGStatModifier(RPGStatType.Health, RPGStatModifier.Types.BaseValuePercent, 1.0f));
+        health.AddModifiers(new RPGStatModBaseAdd(50f));
+        health.AddModifiers(new RPGStatModPercentBaseAdd(1.0f, false));
+        health.AddModifiers(new RPGStatModTotalAdd(15f));
+        health.AddModifiers(new RPGStatModPercentTotalAdd(1.0f));
         health.UpdateModifiers();
 
         var attack = stats.GetStat<RPGAttribute>(RPGStatType.Attack);

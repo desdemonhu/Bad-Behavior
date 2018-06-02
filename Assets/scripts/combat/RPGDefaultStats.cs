@@ -42,7 +42,7 @@ public class RPGDefaultStats : RPGStatCollection
         var evasion = CreateOrGetStat<RPGAttribute>(RPGStatType.Evasion);
         evasion.StatName = "Evasion";
         evasion.StatBaseValue = 0;
-        evasion.AddLinker(new RPGStatLinkerBasic(CreateOrGetStat<RPGAttribute>(RPGStatType.Dexterity), 10f));
+        evasion.AddLinker(new RPGStatLinkerBasic(CreateOrGetStat<RPGAttribute>(RPGStatType.Dexterity), 1f));
         evasion.UpdateLinkers();
 
         var mana = CreateOrGetStat<RPGVital>(RPGStatType.Mana);

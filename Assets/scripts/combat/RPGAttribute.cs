@@ -18,7 +18,6 @@ public class RPGAttribute : RPGStatModifiable, IStatScaleable, IStatLinkable
     {
         get
         {
-            UpdateLinkers();
             return _statLinkerValue;
         }
     }
@@ -27,7 +26,7 @@ public class RPGAttribute : RPGStatModifiable, IStatScaleable, IStatLinkable
     {
         get
         {
-            return base.StatBaseValue + StatLevelValue + StatLinkerValue; ///This calls UpdateLinkers infinitly. Why?
+            return base.StatBaseValue + StatLevelValue + StatLinkerValue;
         }
     }
 
@@ -35,16 +34,21 @@ public class RPGAttribute : RPGStatModifiable, IStatScaleable, IStatLinkable
     {
         ///Change this to scale what happens at each level for bonus to stats
         _statLevelValue = level;
-
+        TriggerValueChange();
     }
 
     public void AddLinker(RPGStatLinker linker)
     {
         _statLinkers.Add(linker);
+        linker.OnValueChange += OnLinkerValueChange;
     }
 
     public void ClearLinkers()
     {
+        foreach(var linker in _statLinkers)
+        {
+            linker.OnValueChange -= OnLinkerValueChange;
+        }
         _statLinkers.Clear();
     }
 
@@ -55,12 +59,16 @@ public class RPGAttribute : RPGStatModifiable, IStatScaleable, IStatLinkable
         {
              _statLinkerValue = link.Value;
         }
+        TriggerValueChange();
     }
-
-    
 
     public RPGAttribute()
     {
         _statLinkers = new List<RPGStatLinker>();
+    }
+
+    private void OnLinkerValueChange(object linker, EventArgs args)
+    {
+        UpdateLinkers();
     }
 }

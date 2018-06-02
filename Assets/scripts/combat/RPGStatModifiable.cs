@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RPGStatModifiable : RPGStat, IStatModifiable {
+public class RPGStatModifiable : RPGStat, IStatModifiable, IStatValueChange {
     private List<RPGStatModifier> _statMods;
     private int _statModValue;
+
+    public event EventHandler OnValueChange;
 
     public override int StatValue
     {
@@ -29,13 +32,32 @@ public class RPGStatModifiable : RPGStat, IStatModifiable {
         _statMods = new List<RPGStatModifier>();
     }
 
+    protected void TriggerValueChange()
+    {
+        if(OnValueChange != null)
+        {
+            OnValueChange(this, null);
+        }
+    }
+
     public void AddModifiers(RPGStatModifier mod)
     {
         _statMods.Add(mod);
+        mod.OnValueChange += OnModValueChange;
+    }
+
+    public void RemoveStatModifier(RPGStatModifier mod)
+    {
+        _statMods.Remove(mod);
+        mod.OnValueChange -= OnModValueChange;
     }
 
     public void ClearModifiers()
     {
+        foreach(var mod in _statMods)
+        {
+            mod.OnValueChange -= OnModValueChange;
+        }
         _statMods.Clear();
     }
 
@@ -43,32 +65,34 @@ public class RPGStatModifiable : RPGStat, IStatModifiable {
     {
         _statModValue = 0;
 
-        float statModBaseValueAdd = 0;
-        float statModBaseValuePercent = 0;
-        float statModTotalValueAdd = 0;
-        float statModTotalValuePercent = 0;
-
-        foreach(RPGStatModifier mod in _statMods)
+        var orderGroups = _statMods.OrderBy(m => m.Order).GroupBy(m => m.Order);
+        foreach(var group in orderGroups)
         {
-            switch (mod.Type)
+            float sum = 0, max = 0;
+            foreach(var mod in group)
             {
-                case RPGStatModifier.Types.BaseValueAdd:
-                    statModBaseValueAdd += mod.Value;
-                    break;
-                case RPGStatModifier.Types.BaseValuePercent:
-                    statModBaseValuePercent += mod.Value;
-                    break;
-                case RPGStatModifier.Types.TotalValueAdd:
-                    statModTotalValueAdd += mod.Value;
-                    break;
-                case RPGStatModifier.Types.TotalValuePercent:
-                    statModTotalValuePercent += mod.Value;
-                    break;
+                if(mod.Stacks == false)
+                {
+                    if(mod.Value > max)
+                    {
+                        max = mod.Value;
+                    }
+                } else
+                {
+                    sum += mod.Value;
+                }
             }
+            _statModValue += group.First().ApplyModifier(
+                StatBaseValue + _statModValue,
+                (sum > max) ? sum : max);
         }
-        _statModValue = (int)((StatBaseValue * statModBaseValuePercent) + statModBaseValueAdd);
-        _statModValue += (int)((StatValue * statModTotalValuePercent) + statModTotalValueAdd);
+
+        TriggerValueChange();
     }
 
- 
+    public void OnModValueChange(object modifier, EventArgs args)
+    {
+        UpdateModifiers();
+    }
+    
 }
