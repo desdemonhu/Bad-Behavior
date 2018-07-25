@@ -828,6 +828,13 @@
     <Compile Include="Assets\Fungus\Thirdparty\Usfxr\Scripts\SfxrSynth.cs" />
     <Compile Include="Assets\FungusExamples\FungusLua\Bindings\CustomScript.cs" />
     <Compile Include="Assets\FungusExamples\MonoBehEvents\SpriteColorChangeFromFungusMouseEvent.cs" />
+    <Compile Include="Assets\scripts\combat\AllAttacks.cs" />
+    <Compile Include="Assets\scripts\combat\AttackOptions.cs" />
+    <Compile Include="Assets\scripts\combat\AttacksGuard.cs" />
+    <Compile Include="Assets\scripts\combat\AttacksPlayer.cs" />
+    <Compile Include="Assets\scripts\combat\CombatStates.cs" />
+    <Compile Include="Assets\scripts\combat\CurrentState.cs" />
+    <Compile Include="Assets\scripts\combat\DieTypes.cs" />
     <Compile Include="Assets\scripts\combat\IStatCurrentValueChange.cs" />
     <Compile Include="Assets\scripts\combat\IStatLinkable.cs" />
     <Compile Include="Assets\scripts\combat\IStatModifiable.cs" />
@@ -847,6 +854,8 @@
     <Compile Include="Assets\scripts\combat\RPGStatModTotalAdd.cs" />
     <Compile Include="Assets\scripts\combat\RPGStatType.cs" />
     <Compile Include="Assets\scripts\combat\RPGVital.cs" />
+    <Compile Include="Assets\scripts\combat\StatsGuard.cs" />
+    <Compile Include="Assets\scripts\combat\StatsPlayer.cs" />
     <Compile Include="Assets\scripts\combat\tests\RPGStatTests.cs" />
     <Compile Include="Assets\scripts\Deeds.cs" />
     <Compile Include="Assets\scripts\maxRelationshipCheck.cs" />

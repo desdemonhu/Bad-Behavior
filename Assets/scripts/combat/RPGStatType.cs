@@ -12,5 +12,7 @@ public enum RPGStatType {
     Dexterity = 6,
     Evasion = 7,
     Speed = 8,
-    Stamina = 9
+    Stamina = 9,
+    Level = 10,
+    DieType = 11
 }

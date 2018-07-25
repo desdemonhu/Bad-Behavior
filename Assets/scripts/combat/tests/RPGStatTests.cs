@@ -10,7 +10,7 @@ public class RPGStatTests : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        stats = new RPGDefaultStats();
+        stats = gameObject.AddComponent<RPGDefaultStats>();
         health = stats.GetStat<RPGVital>(RPGStatType.Health);
         health.OnCurrentValueChange += OnStatValueChange;
 

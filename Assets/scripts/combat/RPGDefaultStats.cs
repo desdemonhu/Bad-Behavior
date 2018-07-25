@@ -6,9 +6,17 @@ public class RPGDefaultStats : RPGStatCollection
 {
     protected override void ConfigureStats()
     {
+        var level = CreateOrGetStat<RPGAttribute>(RPGStatType.Level);
+        level.StatName = "Level";
+        level.StatBaseValue = 1;
+
+        var dieType = CreateOrGetStat<RPGAttribute>(RPGStatType.DieType);
+        level.StatName = "Die Type";
+        level.StatBaseValue = 4;
+
         var stamina = CreateOrGetStat<RPGVital>(RPGStatType.Stamina);
         stamina.StatName = "Stamina";
-        stamina.StatBaseValue = 100;
+        stamina.StatBaseValue = 300;
         stamina.SetCurrentValueToMax();
 
         var health = CreateOrGetStat<RPGVital>(RPGStatType.Health);

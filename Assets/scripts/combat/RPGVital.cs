@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class RPGVital : RPGAttribute, IStatCurrentValueChange {
     private int _statCurrentValue;
+    internal readonly int Statvalue;
+
     public event EventHandler OnCurrentValueChange;
 
     public int StatCurrentValue
