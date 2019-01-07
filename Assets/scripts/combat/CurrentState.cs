@@ -10,6 +10,18 @@ public class CurrentState : MonoBehaviour {
     private GameObject _currentPlayer;
     private GameObject _currentTarget;
     private bool _targetSelected;
+    private string _action;
+
+    public string Action
+    {
+        get { return _action; }
+        set
+        {
+            _action = value;
+            if(OnActionChange != null)
+                OnActionChange(_action);
+        }
+    }
 
     private CombatStates _state ;
     public CombatStates State
@@ -26,12 +38,22 @@ public class CurrentState : MonoBehaviour {
     public delegate void OnVariableChangeDelegate(CombatStates newVal);
     public event OnVariableChangeDelegate OnVariableChange;
 
+    public delegate void OnActionChangeDelegate(string newVal);
+    public event OnActionChangeDelegate OnActionChange;
+
     // Use this for initialization
     void Start () {
         _state = CombatStates.StaminaFilling;
         _targetSelected = false;
         targets = GameObject.FindGameObjectsWithTag("target");
         gameObject.GetComponent<CurrentState>().OnVariableChange += VariableChangeHandler;
+        gameObject.GetComponent<CurrentState>().OnActionChange += ActionChangeHandler;
+    }
+
+    private void ActionChangeHandler(string newVal)
+    {
+        Debug.Log("Getting Action: " + newVal);
+        GetAttack();
     }
 
     // Update is called once per frame
@@ -103,23 +125,24 @@ public class CurrentState : MonoBehaviour {
         VariableChangeHandler(CombatStates.CheckingStamina);
     }
 
-    public static IEnumerator WaitInput(bool wait, GameObject _currentPlayer, GameObject _currentTarget, string attack, bool _targetSelected, Action<CombatStates> VariableChangeHandler)
+    public static IEnumerator WaitInput(bool wait, GameObject _currentPlayer, GameObject _currentTarget, string action, bool _targetSelected, Action<CombatStates> VariableChangeHandler)
     {
         while (wait)
         {
             
             if (Input.GetMouseButtonDown(0))
-            {
+            {               
                 Vector2 ray = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 RaycastHit2D hit = Physics2D.Raycast(ray, Vector2.zero);
                 if (hit.collider)
                 {
-                    Debug.Log("This is the attack: " + attack);
+                    Debug.Log("This is the attack: " + action);
                     _currentTarget = hit.collider.gameObject;
                     Debug.Log("Current Target: " + _currentTarget);
-                    var method = _currentPlayer.GetComponent<AllAttacks>().GetAttack(attack);
+                    var method = _currentPlayer.GetComponent<AllAttacks>().GetAttack(action);
                         method(_currentPlayer, _currentTarget);
                     _targetSelected = false;
+                    action = "";
                     VariableChangeHandler(CombatStates.Attacking);
                     wait = false;
                 }
@@ -143,19 +166,19 @@ public class CurrentState : MonoBehaviour {
             button.GetComponentInChildren<Text>().text = attacks[i].ToString();
             button.name = attacks[i].ToString();
             button.tag = attacks[i].ToString();
-            button.GetComponent<Button>().onClick.AddListener(
-                () => { GetAttack(button.name); }
-                );
+            
         }
     }
 
-    private void GetAttack(string attack)
+    
+
+    private void GetAttack()
     {
         _targetSelected = true;
  
         while (_targetSelected)
         {            
-            StartCoroutine(WaitInput(true, _currentPlayer, _currentTarget, attack, _targetSelected, VariableChangeHandler));
+            StartCoroutine(WaitInput(true, _currentPlayer, _currentTarget, Action, _targetSelected, VariableChangeHandler));
 
             var canvas = GameObject.Find("Canvas");
             var buttons = canvas.GetComponentsInChildren<Button>();
