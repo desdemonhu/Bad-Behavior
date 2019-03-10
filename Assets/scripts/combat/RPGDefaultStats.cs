@@ -21,7 +21,7 @@ public class RPGDefaultStats : RPGStatCollection
 
         var health = CreateOrGetStat<RPGVital>(RPGStatType.Health);
         health.StatName = "Health";
-        health.StatBaseValue = 100;
+        health.StatBaseValue = 10;
         health.SetCurrentValueToMax();
 
         var attack = CreateOrGetStat<RPGAttribute>(RPGStatType.Attack);
@@ -40,7 +40,13 @@ public class RPGDefaultStats : RPGStatCollection
         dexterity.StatName = "Dexterity";
         dexterity.StatBaseValue = 1;
 
-    ///Linked Stats
+        var alive = CreateOrGetStat<RPGAttribute>(RPGStatType.Alive);
+        alive.StatName = "Alive";
+        alive.StatBaseValue = 0;
+
+        
+
+        ///Linked Stats
         var speed = CreateOrGetStat<RPGAttribute>(RPGStatType.Speed);
         speed.StatName = "Speed";
         speed.StatBaseValue = 0;

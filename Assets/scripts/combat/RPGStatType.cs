@@ -14,5 +14,6 @@ public enum RPGStatType {
     Speed = 8,
     Stamina = 9,
     Level = 10,
-    DieType = 11
+    DieType = 11,
+    Alive = 12,
 }

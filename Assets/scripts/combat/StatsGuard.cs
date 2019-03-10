@@ -16,7 +16,7 @@ public class StatsGuard : MonoBehaviour {
         attackDie = stats.GetStat<RPGAttribute>(RPGStatType.DieType);
 
         ///Modifiy base stats
-        health.StatBaseValue = health.StatBaseValue + 50;
+        health.StatBaseValue = health.StatBaseValue;
         attackDie.StatBaseValue = DieTypes.GetAttackDie(DieTypes.DieType.D6);
         Debug.Log("Guard health is: " + health.StatBaseValue);
     }
