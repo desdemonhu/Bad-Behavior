@@ -59,12 +59,12 @@ public class RPGDefaultStats : RPGStatCollection
         evasion.AddLinker(new RPGStatLinkerBasic(CreateOrGetStat<RPGAttribute>(RPGStatType.Dexterity), 1f));
         evasion.UpdateLinkers();
 
-        var mana = CreateOrGetStat<RPGVital>(RPGStatType.Mana);
-        mana.StatName = "Mana";
-        mana.StatBaseValue = 0;
-        mana.AddLinker(new RPGStatLinkerBasic(CreateOrGetStat<RPGAttribute>(RPGStatType.Will), 10f));
-        mana.UpdateLinkers();
-        mana.SetCurrentValueToMax();
+        var willpower = CreateOrGetStat<RPGVital>(RPGStatType.Willpower);
+        willpower.StatName = "Willpower";
+        willpower.StatBaseValue = 0;
+        willpower.AddLinker(new RPGStatLinkerBasic(CreateOrGetStat<RPGAttribute>(RPGStatType.Will), 10f));
+        willpower.UpdateLinkers();
+        willpower.SetCurrentValueToMax();
     }
 
 }
