@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -14,6 +14,8 @@ MonoBehaviour:
   personalityTraitDefinitions:
   - name: anger
     description: how pissed off are they
+  - name: fear
+    description: how afraid they are
   - name: love
     description: how much do they like you
   - name: world
@@ -41,6 +43,7 @@ MonoBehaviour:
     - 0
     - 0
     - 0
+    - 0
     relationships: []
     percentJudgeParents: 0
   - id: 4
@@ -50,6 +53,7 @@ MonoBehaviour:
     parents: 
     traits:
     - 0
+    - -50
     - 0
     - -20
     - 0
@@ -69,6 +73,7 @@ MonoBehaviour:
     - 0
     - 0
     - 0
+    - 0
     relationships: []
     percentJudgeParents: 0
   - id: 3
@@ -78,6 +83,7 @@ MonoBehaviour:
     parents: 
     traits:
     - 50
+    - -40
     - -20
     - 40
     - 0
@@ -92,6 +98,7 @@ MonoBehaviour:
     parents: 02000000
     traits:
     - 30
+    - 5
     - 4
     - 5
     - 5
@@ -122,6 +129,7 @@ MonoBehaviour:
     parents: 04000000
     traits:
     - 0
+    - -50
     - 0
     - -40
     - -40
@@ -152,6 +160,7 @@ MonoBehaviour:
     parents: 03000000
     traits:
     - 50
+    - -20
     - 0
     - 50
     - 40
@@ -182,6 +191,7 @@ MonoBehaviour:
     parents: 0200000004000000
     traits:
     - -20
+    - 40
     - 0
     - -30
     - 20
@@ -212,6 +222,7 @@ MonoBehaviour:
     parents: 02000000
     traits:
     - 0
+    - 60
     - 0
     - 100
     - -70
@@ -226,6 +237,7 @@ MonoBehaviour:
     parents: 04000000
     traits:
     - 0
+    - -50
     - 0
     - 30
     - -30
@@ -241,6 +253,7 @@ MonoBehaviour:
     traits:
     - 10
     - 0
+    - 0
     - 70
     - -40
     - -50
@@ -254,6 +267,7 @@ MonoBehaviour:
     parents: 04000000
     traits:
     - 50
+    - 0
     - 0
     - 0
     - 0

@@ -4,9 +4,12 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
+using PixelCrushers.LoveHate;
 
 public class CurrentState : MonoBehaviour {
 
+    public bool inCombat = false;
     private GameObject[] targets; 
     private GameObject _currentPlayer;
     private GameObject _currentTarget;
@@ -46,15 +49,30 @@ public class CurrentState : MonoBehaviour {
     public delegate void OnActionChangeDelegate(string newVal);
     public event OnActionChangeDelegate OnActionChange;
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnLevelLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnLevelLoaded;
+    }
+
     // Use this for initialization
-    void Start () {
-        _state = CombatStates.StaminaFilling;
-        _targetSelected = false;
-        _partyCount = GameObject.FindGameObjectsWithTag("party").Length;
-        _enemyCount = GameObject.FindGameObjectsWithTag("enemy").Length;
-        targets = GameObject.FindGameObjectsWithTag("party").Concat(GameObject.FindGameObjectsWithTag("enemy")).ToArray();
-        gameObject.GetComponent<CurrentState>().OnVariableChange += VariableChangeHandler;
-        gameObject.GetComponent<CurrentState>().OnActionChange += ActionChangeHandler;
+    void OnLevelLoaded (Scene scene, LoadSceneMode mode) {
+
+        if(scene.name.StartsWith("Combat"))
+        {
+            inCombat = true;
+            _state = CombatStates.StaminaFilling;
+            _targetSelected = false;
+            _partyCount = GameObject.FindGameObjectsWithTag("party").Length;
+            _enemyCount = GameObject.FindGameObjectsWithTag("enemy").Length;
+            targets = GameObject.FindGameObjectsWithTag("party").Concat(GameObject.FindGameObjectsWithTag("enemy")).ToArray();
+            gameObject.GetComponent<CurrentState>().OnVariableChange += VariableChangeHandler;
+            gameObject.GetComponent<CurrentState>().OnActionChange += ActionChangeHandler;
+        }
     }
 
     private void ActionChangeHandler(string newVal)
@@ -159,12 +177,18 @@ public class CurrentState : MonoBehaviour {
     {
         Debug.Log("Party Won!");
         //Open Win Screen
+        GameObject screen = (GameObject)Instantiate(Resources.Load("Prefabs/CombatWon"));
+        screen.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        inCombat = false;
     }
 
     private void BattleLost()
     {
         Debug.Log("Party Lost");
         ///Open Dead screen
+        GameObject screen = (GameObject)Instantiate(Resources.Load("Prefabs/CombatLost"));
+        screen.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        inCombat = false;
     }
 
     public static IEnumerator WaitInput(bool wait, GameObject _currentPlayer, GameObject _currentTarget, string action, bool _targetSelected, Action<CombatStates> VariableChangeHandler)
@@ -266,8 +290,19 @@ public class CurrentState : MonoBehaviour {
 
     private void EnemyAction()
     {
-        ///Set Attack based on _currentPlayer attacks
-        Action = "Attack";
+        ///Check for _currentPlayer anger, love and fear
+        float[] traits = new float[] { 0, 1, 2};
+        float affinity = _currentPlayer.GetComponent<FactionMember>().GetAffinity(0);
+        Debug.Log(_currentPlayer.name + "'s affinity is: " + affinity);
+
+        ///Get attack pattern based on affinity
+        Action = EnemyAttackPattern(affinity).ToString();
+    }
+
+    private AttackOptions EnemyAttackPattern(float affinity)
+    {
+        string component = "Attacks" + _currentPlayer.name;
+        return _currentPlayer.GetComponent<AttacksEnemy>().AttackPattern(affinity);
     }
 
     private void SelectAction()

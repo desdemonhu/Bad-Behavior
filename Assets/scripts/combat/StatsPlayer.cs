@@ -48,7 +48,11 @@ public class StatsPlayer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        StatusBars();
+        if (gameObject.GetComponent<CurrentState>().inCombat)
+        {
+            StatusBars();
+        }
+        
 	}
 
     private void StatusBars()

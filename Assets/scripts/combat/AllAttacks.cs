@@ -75,7 +75,7 @@ public class AllAttacks : MonoBehaviour {
             case "Player":
                 return target.GetComponent<AttacksPlayer>().Attacks;
             case "Guard":
-                return target.GetComponent<AttacksGuard>().Attacks;
+                return target.GetComponent<AttacksEnemy>().Attacks;
             default: return null;
         }
     }
