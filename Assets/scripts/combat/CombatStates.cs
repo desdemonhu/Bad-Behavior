@@ -9,5 +9,6 @@ public enum CombatStates {
     SelectAction = 3,
     SelectTarget = 4,
     Attacking = 5,
-    CheckingStamina = 6
+    CheckingStamina = 6,
+    Negotiating = 7
 }

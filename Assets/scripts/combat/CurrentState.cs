@@ -6,6 +6,7 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using PixelCrushers.LoveHate;
+using Fungus;
 
 public class CurrentState : MonoBehaviour {
 
@@ -19,6 +20,8 @@ public class CurrentState : MonoBehaviour {
     private int _partyCount;
     private int _partyDead = 0;
     private string _action;
+    private bool _isPlayerTurn = true;
+    private Flowchart flowchart;
 
     public string Action
     {
@@ -65,6 +68,7 @@ public class CurrentState : MonoBehaviour {
         if(scene.name.StartsWith("Combat"))
         {
             inCombat = true;
+            flowchart = gameObject.GetComponent<AttacksPlayer>().negotiation;
             _state = CombatStates.StaminaFilling;
             _targetSelected = false;
             _partyCount = GameObject.FindGameObjectsWithTag("party").Length;
@@ -83,7 +87,7 @@ public class CurrentState : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        FillStamina();
+        if(!flowchart.GetBooleanVariable("negotiating")) FillStamina();
 	}
 
     private void VariableChangeHandler(CombatStates newVal)
@@ -114,11 +118,19 @@ public class CurrentState : MonoBehaviour {
                 case CombatStates.CheckingStamina:
                     CheckStamina();
                     break;
+                case CombatStates.Negotiating:
+                    Negotiating();
+                    break;
                 default:
                     Debug.Log("State is horked up");
                     break;
             }
         }
+    }
+
+    private void Negotiating()
+    {
+        Debug.Log("Negotiating");
     }
 
     private void CheckStamina()
@@ -143,6 +155,7 @@ public class CurrentState : MonoBehaviour {
 
     private void Attacking()
     {
+
         Debug.Log("Attack animation goes here");
         _currentPlayer.GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Stamina).StatCurrentValue = 0;
         
@@ -191,20 +204,31 @@ public class CurrentState : MonoBehaviour {
         inCombat = false;
     }
 
-    public static IEnumerator WaitInput(bool wait, GameObject _currentPlayer, GameObject _currentTarget, string action, bool _targetSelected, Action<CombatStates> VariableChangeHandler)
+    public static IEnumerator WaitInput(bool wait, GameObject _currentPlayer, GameObject _currentTarget, string action, bool _targetSelected, Action<CombatStates> VariableChangeHandler, bool _isPlayerTurn)
     {
+        bool finished = false;
         while (wait)
         {
-            ///What if the person
-            if(_currentPlayer.tag == "enemy")
+            if (_currentPlayer.tag == "enemy")
             {
+                if(_isPlayerTurn)
+                {
+                    VariableChangeHandler(CombatStates.Negotiating);
+                    wait = false;
+                }
                 _currentTarget = GameObject.Find("Player");
                 var method = _currentPlayer.GetComponent<AllAttacks>().GetAttack(action);
-                method(_currentPlayer, _currentTarget);
-                _targetSelected = false;
-                action = "";
-                VariableChangeHandler(CombatStates.Attacking);
-                wait = false;
+                while (!finished)
+                {
+                    finished = method(_currentPlayer, _currentTarget);
+                    if (finished)
+                    {
+                        _targetSelected = false;
+                        action = "";
+                        VariableChangeHandler(CombatStates.Attacking);
+                        wait = false;
+                    }
+                }
             } else
             {
                 if (Input.GetMouseButtonDown(0))
@@ -217,17 +241,24 @@ public class CurrentState : MonoBehaviour {
                         _currentTarget = hit.collider.gameObject;
                         Debug.Log("Current Target: " + _currentTarget);
                         var method = _currentPlayer.GetComponent<AllAttacks>().GetAttack(action);
-                        method(_currentPlayer, _currentTarget);
-                        _targetSelected = false;
-                        action = "";
-                        VariableChangeHandler(CombatStates.Attacking);
-                        wait = false;
+                        
+                        while (!finished)
+                        {
+                            finished = method(_currentPlayer, _currentTarget);
+                            if (finished)
+                            {
+                                _targetSelected = false;
+                                action = "";
+                                VariableChangeHandler(CombatStates.Attacking);
+                                wait = false; 
+                            }
+                        }
                     }
                 }
             }
-            
             yield return null;
         }
+
     }
 
     private void PartyAction()
@@ -248,8 +279,6 @@ public class CurrentState : MonoBehaviour {
         attackCanvasPosition.y = Screen.height / 2;
         attackerPosition.x = 100;
 
-
-        Debug.Log(_currentPlayer.name);
         AttackOptions[] attacks = _currentPlayer.GetComponent<AllAttacks>().GetTargetAttacks(_currentPlayer);
 
         ///Attack Buttons setup
@@ -266,12 +295,11 @@ public class CurrentState : MonoBehaviour {
             {
                 buttonPosition.y = attackCanvas.transform.up.y + 150;
                 buttonBase = buttonPosition.y - (buttonHeight + 10);
-
             }
             else
             {
                 buttonPosition.y = buttonBase;
-                buttonBase += buttonHeight;
+                buttonBase -= buttonHeight + 10;
             }
 
             button.GetComponent<RectTransform>().SetPositionAndRotation(buttonPosition, (button.GetComponent<RectTransform>().localRotation));
@@ -301,7 +329,6 @@ public class CurrentState : MonoBehaviour {
 
     private AttackOptions EnemyAttackPattern(float affinity)
     {
-        string component = "Attacks" + _currentPlayer.name;
         return _currentPlayer.GetComponent<AttacksEnemy>().AttackPattern(affinity);
     }
 
@@ -313,7 +340,7 @@ public class CurrentState : MonoBehaviour {
             {
                 PartyAction();
             }
-            else if(_currentPlayer.tag == "enemy" && _currentPlayer.GetComponent<RPGDefaultStats>().GetStat<RPGAttribute>(RPGStatType.Alive).StatValue < 1)
+            else if(_currentPlayer.tag == "enemy" && _currentPlayer.GetComponent<RPGDefaultStats>().GetStat<RPGAttribute>(RPGStatType.Alive).StatValue < 1 && !_isPlayerTurn)
             {
                 EnemyAction();
             }
@@ -341,8 +368,9 @@ public class CurrentState : MonoBehaviour {
         _targetSelected = true;
  
         while (_targetSelected)
-        {            
-            StartCoroutine(WaitInput(true, _currentPlayer, _currentTarget, Action, _targetSelected, VariableChangeHandler));
+        {
+            _isPlayerTurn = flowchart.GetBooleanVariable("negotiating");
+            StartCoroutine(WaitInput(true, _currentPlayer, _currentTarget, Action, _targetSelected, VariableChangeHandler, _isPlayerTurn));
 
             if(_currentPlayer && _currentPlayer.tag == "party")
             {

@@ -7,6 +7,7 @@ public enum AttackOptions {
     Attack = 1,
     Defend = 2,
     WillPower = 3,
-    Surrender = 4
+    Surrender = 4,
+    Negotiate = 5,
 
 }

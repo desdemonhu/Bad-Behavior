@@ -9,6 +9,9 @@ TagManager:
   - Defend
   - enemy
   - party
+  - Enemy
+  - Laser
+  - Negotiate
   layers:
   - Default
   - TransparentFX
