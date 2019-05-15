@@ -42,6 +42,7 @@ public class RPGVital : RPGAttribute, IStatCurrentValueChange {
     {
         StatCurrentValue = StatValue;
     }
+
 	
     private void TriggerCurrentValueChange()
     {

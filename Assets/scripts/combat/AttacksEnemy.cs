@@ -46,7 +46,7 @@ public class AttacksEnemy : MonoBehaviour {
     {
         if(enemy == EnemyType.Guard)
         {
-            if (affinity >= 50)
+            if (affinity <= 10)
             {
                 return AttackOptions.Attack;
             }

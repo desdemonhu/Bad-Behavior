@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fungus;
+using PixelCrushers.LoveHate;
 
 public class AllAttacks : MonoBehaviour {
     private Dictionary<AttackOptions, Func<GameObject, GameObject, bool>> _allAttacks;
@@ -71,13 +72,15 @@ public class AllAttacks : MonoBehaviour {
         }
     }
 
-    ///All of the enemies go here with their specific component name
+    ///TODO: All of the enemies go here with their specific component name
     public AttackOptions[] GetTargetAttacks(GameObject target)
     {
         switch (target.name)
         {
             case "Player":
                 return target.GetComponent<AttacksPlayer>().Attacks;
+            case "Chace":
+                return target.GetComponent<AttacksChace>().Attacks;
             case "Guard":
                 return target.GetComponent<AttacksEnemy>().Attacks;
             default: return null;
@@ -100,6 +103,11 @@ public class AllAttacks : MonoBehaviour {
         {
             Debug.Log(player.name + " did " + rng + " damage to " + target.name);
         }
+
+        var tactic = "Attack";
+        if(player.tag == "party") { AdjustRelationship(tactic, target); }
+        
+
         return true;
     }
 
@@ -114,7 +122,60 @@ public class AllAttacks : MonoBehaviour {
         Flowchart flowchart = gameObject.GetComponent<AttacksPlayer>().negotiation;
         flowchart.SetBooleanVariable("negotiating", true);
         flowchart.ExecuteBlock(target.name);
+
+        StartCoroutine(NegotiationTactic(flowchart, target));
+        
         return true;
+    }
+
+
+    private float CalculateRelationship(string tactic, GameObject target)
+    {
+             ///TODO Add social stats to negotiation calculation
+        var factionDatabase = gameObject.GetComponent<FactionMember>().factionManager.factionDatabase;
+        var factionID = factionDatabase.GetFactionID(target.name);
+        var socialStats = GameObject.Find("Player").GetComponent<SocialStats>();
+        var mad = 0;
+        var sad = 1;
+        var joy = 2;
+        float newValue;
+
+        switch (tactic)
+        {
+            case "Flatter":
+                newValue = factionDatabase.GetPersonalityTrait(factionID, joy) + 40 + socialStats.GetStat(SocialStats.SocialStatType.Extroversion).StatValue;
+                if(newValue >= 80) { newValue = 100 ; }
+                factionDatabase.SetPersonalityTrait(target.name, joy, newValue);
+                factionDatabase.SetPersonalityTrait(target.name, sad, 0);
+                break;
+            case "Attack":
+                newValue = factionDatabase.GetPersonalityTrait(factionID, mad) + 40;
+                if(newValue >= 80) { newValue = 100; }
+                factionDatabase.SetPersonalityTrait(target.name, mad, newValue);
+                factionDatabase.SetPersonalityTrait(target.name, sad, 0);
+                factionDatabase.SetPersonalityTrait(target.name, joy, 0);
+                break;
+            default:
+                newValue = 0;
+                break;
+
+        }
+
+        return factionDatabase.GetPersonalityTrait(factionID, joy) - (factionDatabase.GetPersonalityTrait(factionID, mad) + factionDatabase.GetPersonalityTrait(factionID, sad));
+    }
+
+    private void AdjustRelationship(string tactic, GameObject target)
+    {
+        var scale = CalculateRelationship(tactic, target);
+        GameObject.Find("Player").GetComponent<Deeds>().Negotiate(target, scale);
+    }
+
+    IEnumerator NegotiationTactic(Flowchart flowchart, GameObject target)
+    {
+        yield return new WaitUntil(() => flowchart.GetBooleanVariable("negotiating") == false);
+        var tactic = flowchart.GetStringVariable("tactic");
+        Debug.Log("Tactic: " + tactic);
+        AdjustRelationship(tactic, target);
     }
 
 }

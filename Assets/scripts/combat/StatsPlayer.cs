@@ -10,10 +10,13 @@ public class StatsPlayer : MonoBehaviour {
     private RPGVital stamina;
     private RPGAttribute dex;
     private RPGAttribute attackDie;
-    public GameObject playerStatus;
     private Transform statusBar;
     private Transform willpowerBar;
     private Transform staminaBar;
+    public  GameObject playerStatus;
+
+
+
 
     // Use this for initialization
     void Start () {
@@ -26,17 +29,18 @@ public class StatsPlayer : MonoBehaviour {
         dex = stats.GetStat<RPGAttribute>(RPGStatType.Dexterity);
         attackDie = stats.GetStat<RPGAttribute>(RPGStatType.DieType);
 
-        ///Set player status
-        playerStatus = GameObject.Find("PartyMember-" + gameObject.name);
-        statusBar = playerStatus.transform.Find("HealthBars").transform.Find("Bar-Health");
-        willpowerBar = playerStatus.transform.Find("WillPower").transform.Find("Bar-Will");
-        staminaBar = playerStatus.transform.Find("Stamina").transform.Find("Bar-Stamina");
+        if (gameObject.GetComponent<CurrentState>().inCombat)
+        {
+            SetPlayerStatusBars();
+        }
+
 
         ///Modifiy base stats
+        ///
         health.StatBaseValue = health.StatBaseValue + 10;
         health.SetCurrentValueToMax();
         attackDie.StatBaseValue = DieTypes.GetAttackDie(DieTypes.DieType.D4);
-        dex.StatBaseValue = dex.StatBaseValue + 2;
+        dex.StatBaseValue = dex.StatBaseValue + 1;
         dex.UpdateLinkers();
         Debug.Log("Player health is: " + health.StatBaseValue);
         Debug.Log("Extroversion: " + socialStats.GetStat(SocialStats.SocialStatType.Extroversion).StatBaseValue);
@@ -48,12 +52,22 @@ public class StatsPlayer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
         if (gameObject.GetComponent<CurrentState>().inCombat)
         {
             StatusBars();
         }
         
 	}
+
+    public virtual void SetPlayerStatusBars()
+    {
+        playerStatus = GameObject.Find("PartyMember-" + gameObject.name);
+        statusBar = playerStatus.transform.Find("HealthBars").transform.Find("Bar-Health");
+        willpowerBar = playerStatus.transform.Find("WillPower").transform.Find("Bar-Will");
+        staminaBar = playerStatus.transform.Find("Stamina").transform.Find("Bar-Stamina");
+    }
+
 
     private void StatusBars()
     {
@@ -65,7 +79,7 @@ public class StatsPlayer : MonoBehaviour {
 
     private void StaminaBar()
     {
-
+        
         float calcValue = (float)stamina.StatCurrentValue / (float)stamina.StatBaseValue;
         Vector3 barVector = staminaBar.localScale;
         barVector.x = calcValue;

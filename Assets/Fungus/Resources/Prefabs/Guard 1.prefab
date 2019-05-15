@@ -23,10 +23,11 @@ GameObject:
   - component: {fileID: 114192471293601032}
   - component: {fileID: 222869108404201618}
   - component: {fileID: 61998651855780282}
-  - component: {fileID: 114115989163477698}
+  - component: {fileID: 114945098720146742}
+  - component: {fileID: 114082929282512648}
   m_Layer: 0
   m_Name: Guard 1
-  m_TagString: target
+  m_TagString: enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -85,7 +86,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.4667091, y: 9.189474}
   m_EdgeRadius: 0
---- !u!114 &114115989163477698
+--- !u!114 &114082929282512648
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -93,7 +94,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1318880334468000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: c922e7c3cbfccd343a6ff9aab8c49d75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114192471293601032
@@ -207,6 +208,18 @@ MonoBehaviour:
   portraitsFace: 0
   setSayDialog: {fileID: 0}
   description: 
+--- !u!114 &114945098720146742
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1318880334468000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef407f3b47fb082469e689e17c0b50a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Attacks: 
 --- !u!212 &212436029402313716
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -276,6 +289,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -7.2, y: -0.349881}
+  m_AnchoredPosition: {x: -7.2, y: -1.7}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}

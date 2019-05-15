@@ -4,7 +4,7 @@ using UnityEngine;
 using PixelCrushers.LoveHate;
 
 public class maxRelationshipCheck : MonoBehaviour {
-    string[] names = {"Tao Chace" };
+    string[] names = {"Chace" };
 
     // Use this for initialization
     void Start () {

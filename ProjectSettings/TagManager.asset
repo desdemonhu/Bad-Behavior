@@ -12,6 +12,7 @@ TagManager:
   - Enemy
   - Laser
   - Negotiate
+  - Emotion
   layers:
   - Default
   - TransparentFX

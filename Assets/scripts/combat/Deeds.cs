@@ -48,6 +48,20 @@ public class Deeds : MonoBehaviour {
 
 
     /// <summary>
+    /// Negotiations - type of negotiation sets relationship trait)
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="action"></param>
+    public virtual void Negotiate(GameObject target, float scale)
+    {
+        GameObject player = GameObject.Find("Player");
+        var factionID = player.GetComponent<FactionMember>().factionManager.GetFactionID(target.name);
+        float newRelationshipNumber = player.GetComponent<FactionMember>().factionManager.GetFaction(factionID).GetPersonalRelationshipTrait(0, 0) + scale;
+        Debug.Log("newRelationshipNumber: " + newRelationshipNumber);
+        player.GetComponent<FactionMember>().factionManager.factionDatabase.SetPersonalRelationshipTrait(factionID, 0, 0, newRelationshipNumber);
+    }
+
+    /// <summary>
     /// Judgement tests overall alignment and creates affinity bonus based on that
     /// </summary>
     /// <param name="target"></param>

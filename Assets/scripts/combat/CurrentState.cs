@@ -14,6 +14,7 @@ public class CurrentState : MonoBehaviour {
     private GameObject[] targets; 
     private GameObject _currentPlayer;
     private GameObject _currentTarget;
+    private GameObject _lastPlayer;
     private bool _targetSelected;
     private int _enemyCount;
     private int _enemyDead = 0;
@@ -76,7 +77,67 @@ public class CurrentState : MonoBehaviour {
             targets = GameObject.FindGameObjectsWithTag("party").Concat(GameObject.FindGameObjectsWithTag("enemy")).ToArray();
             gameObject.GetComponent<CurrentState>().OnVariableChange += VariableChangeHandler;
             gameObject.GetComponent<CurrentState>().OnActionChange += ActionChangeHandler;
+            EmotionBubble(GameObject.FindGameObjectsWithTag("enemy").ToArray());
+
+            foreach(var target in targets)
+            {
+                //TODO: Add everyone who could be in the fight so that their status bars exist
+                if (target.name.StartsWith("Player")) target.GetComponent<StatsPlayer>().SetPlayerStatusBars();
+                if (target.name.StartsWith("Chace")) target.GetComponent<StatsChace>().SetPlayerStatusBars();
+                if (target.name.StartsWith("Guard")) target.GetComponent<StatsGuard>().SetPlayerStatusBars();
+            }
         }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (flowchart)
+        {
+            if (!flowchart.GetBooleanVariable("negotiating") && inCombat) FillStamina();
+        }
+    }
+
+    private void EmotionBubble(GameObject[] enemies)
+    {
+        foreach (var enemy in enemies)
+        {
+            var bubblePosition = enemy.GetComponentInChildren<Transform>().position;
+            bubblePosition.y += 385;
+            bubblePosition.x += 160;
+            var bubble = (GameObject)Instantiate(Resources.Load("Prefabs/EmotionBubble"));
+            bubble.name = enemy.name + "-EmotionBubble";
+            bubble.transform.SetParent(GameObject.Find("Canvas").transform, false);
+            bubble.GetComponent<Transform>().SetPositionAndRotation(bubblePosition, bubble.GetComponent<Transform>().localRotation);
+
+            SetEmotion(enemy);
+            
+
+        } 
+    }
+
+    private void SetEmotion(GameObject enemy)
+    {
+        var affinity = GetAffinity(enemy);
+        string emotion = CalculateAffinity(affinity);
+        var bubble = enemy.name + "-EmotionBubble";
+
+        ///Deactiavate all
+        for(var i = 0; i < GameObject.Find(bubble).transform.childCount; i++)
+        {
+            GameObject.Find(bubble).transform.GetChild(i).gameObject.SetActive(false);
+        }
+
+        ///Set new emotion
+        GameObject.Find(bubble).transform.Find(emotion).gameObject.SetActive(true);
+    }
+
+
+    private string CalculateAffinity(float affinity)
+    {
+        if(affinity < -10) { return "Mad"; }
+        else if( -39 < affinity && affinity <= 0) { return "Sad"; }
+        else { return "Joy"; }
     }
 
     private void ActionChangeHandler(string newVal)
@@ -85,10 +146,7 @@ public class CurrentState : MonoBehaviour {
         GetAttack();
     }
 
-    // Update is called once per frame
-    void Update () {
-        if(!flowchart.GetBooleanVariable("negotiating")) FillStamina();
-	}
+    
 
     private void VariableChangeHandler(CombatStates newVal)
     {
@@ -138,28 +196,55 @@ public class CurrentState : MonoBehaviour {
         if (_state == CombatStates.CheckingStamina)
         {
             Debug.Log("Checking Stamina");
+            List<GameObject> ready = new List<GameObject>();
+            int order = 0;
+
             for (var i = 0; i < targets.Length; i++)
             {
                 var stamina = targets[i].GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Stamina);
 
                 if (stamina.StatCurrentValue >= stamina.StatBaseValue)
                 {
-                    _currentPlayer = targets[i];
-                    VariableChangeHandler(CombatStates.CharacterTurn);
-                    return;
+                    ready.Add(targets[i]);
                 }
             }
-            VariableChangeHandler(CombatStates.StaminaFilling);
+            Debug.Log("Ready queue: " + ready.Count);
+            if(ready.Count > 1)
+            {
+                ///Do them in order of speed
+                
+                List<GameObject> sortedReady = ready.OrderByDescending(o => o.GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Speed)).ToList();
+
+                if (_lastPlayer)
+                {
+                    if(_lastPlayer.name == sortedReady[order].name)
+                    {
+                        order += 1;
+                    }
+                }
+                Debug.Log("Order: " + order);
+                _currentPlayer = sortedReady[order];
+                VariableChangeHandler(CombatStates.CharacterTurn);
+                return;
+
+            } else if(ready.Count == 1)
+            {
+                _currentPlayer = ready[order];
+                VariableChangeHandler(CombatStates.CharacterTurn);
+                return;
+            } else
+            {
+                VariableChangeHandler(CombatStates.StaminaFilling);
+                return;
+            }
         }  
     }
 
     private void Attacking()
     {
-
-        Debug.Log("Attack animation goes here");
         _currentPlayer.GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Stamina).StatCurrentValue = 0;
-        
-        foreach(var target in targets)
+
+        foreach (var target in targets)
         {
             if (target.GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Health).StatCurrentValue <= 0)
             {
@@ -181,6 +266,7 @@ public class CurrentState : MonoBehaviour {
                 
             }
         }
+        _lastPlayer = _currentPlayer;
         _currentTarget = null;
         _currentPlayer = null;
         VariableChangeHandler(CombatStates.CheckingStamina);
@@ -319,12 +405,19 @@ public class CurrentState : MonoBehaviour {
     private void EnemyAction()
     {
         ///Check for _currentPlayer anger, love and fear
-        float[] traits = new float[] { 0, 1, 2};
-        float affinity = _currentPlayer.GetComponent<FactionMember>().GetAffinity(0);
-        Debug.Log(_currentPlayer.name + "'s affinity is: " + affinity);
+        float affinity = GetAffinity(_currentPlayer);
 
         ///Get attack pattern based on affinity
         Action = EnemyAttackPattern(affinity).ToString();
+    }
+
+    private float GetAffinity(GameObject target)
+    {
+        GameObject player = GameObject.Find("Player");
+        var factionID = player.GetComponent<FactionMember>().factionManager.GetFactionID(target.name);
+
+        return player.GetComponent<FactionMember>().factionManager.GetFaction(factionID).GetPersonalRelationshipTrait(0, 0);
+
     }
 
     private AttackOptions EnemyAttackPattern(float affinity)
@@ -361,7 +454,6 @@ public class CurrentState : MonoBehaviour {
 
     }
 
-    
 
     private void GetAttack()
     {
@@ -400,6 +492,7 @@ public class CurrentState : MonoBehaviour {
     {
         if (_state == CombatStates.StaminaFilling)
         {
+
             foreach (var target in targets)
             {
                 var stamina = target.GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Stamina);
@@ -407,26 +500,43 @@ public class CurrentState : MonoBehaviour {
 
                 if(stamina.StatCurrentValue >= stamina.StatBaseValue)
                 {
-                    _currentPlayer = target;
-                    VariableChangeHandler(CombatStates.CharacterTurn);
+                    VariableChangeHandler(CombatStates.CheckingStamina);
+                    //_currentPlayer = target;
+                    //VariableChangeHandler(CombatStates.CharacterTurn);
                     return;
                 }
                 else if (stamina.StatCurrentValue < stamina.StatBaseValue)
                 {
-                    stamina.StatCurrentValue += speed;
-                    for(var i = 0; i < targets.Length; i++)
+                    ///Set emotion for enemeies
+                    if(stamina.StatCurrentValue * 2 >= stamina.StatBaseValue)
                     {
-                        if(targets[i].GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Stamina).StatCurrentValue >= stamina.StatBaseValue)
+                        if (target.tag == "enemy")
                         {
-                            _currentPlayer = targets[i];
-                            VariableChangeHandler(CombatStates.CharacterTurn);
-                            return;
+                            ///set emotion
+                            SetEmotion(target);
                         }
                     }
+                    stamina.StatCurrentValue += speed;
+                    if(stamina.StatCurrentValue >= stamina.StatBaseValue)
+                    { VariableChangeHandler(CombatStates.CheckingStamina);
+                        return;
+                    }
+                    //for(var i = 0; i < targets.Length; i++)
+                    //{
+                    //    if(targets[i].GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Stamina).StatCurrentValue >= stamina.StatBaseValue)
+                    //    {
+                    //        _currentPlayer = targets[i];
+                    //        VariableChangeHandler(CombatStates.CharacterTurn);
+                    //        return;
+                    //    }
+                    //}
                 }
             }
         }
-    } 
+    }
+
+
     
+
 
 }

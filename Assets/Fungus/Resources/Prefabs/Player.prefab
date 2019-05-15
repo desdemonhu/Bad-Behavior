@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4887187557192600}
   - component: {fileID: 212939173381710170}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Image-Mini
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,9 +44,10 @@ GameObject:
   - component: {fileID: 61715097165821076}
   - component: {fileID: 114532168202673374}
   - component: {fileID: 114210199605044868}
+  - component: {fileID: 114671226734669136}
   m_Layer: 0
   m_Name: Player
-  m_TagString: target
+  m_TagString: party
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -58,8 +59,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1446795369599120}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.26686573, y: 0.1141538, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 1.52, y: 0.31, z: 0}
+  m_LocalScale: {x: 0.747, y: 0.747, z: 0.747}
   m_Children: []
   m_Father: {fileID: 224680309241471334}
   m_RootOrder: 0
@@ -115,6 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Attacks: 
+  negotiation: {fileID: 0}
 --- !u!114 &114532168202673374
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -126,6 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01de40d923ea37741b1bb139b1c48979, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inCombat: 0
 --- !u!114 &114622837693699438
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -145,6 +148,17 @@ MonoBehaviour:
   portraitsFace: 0
   setSayDialog: {fileID: 0}
   description: 
+--- !u!114 &114671226734669136
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1849928053261520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4e55546bd104d64782da70c5ac78bbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114761264331894492
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -262,6 +276,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats: {fileID: 0}
   socialStats: {fileID: 0}
+  playerStatus: {fileID: 0}
 --- !u!212 &212939173381710170
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -296,7 +311,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 4418388ae4809714cb24b41a95b518dd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -331,6 +346,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 6.54, y: -5.57}
+  m_AnchoredPosition: {x: 6.27, y: -5.04}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}

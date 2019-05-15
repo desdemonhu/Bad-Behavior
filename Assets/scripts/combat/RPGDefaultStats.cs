@@ -49,19 +49,19 @@ public class RPGDefaultStats : RPGStatCollection
         ///Linked Stats
         var speed = CreateOrGetStat<RPGAttribute>(RPGStatType.Speed);
         speed.StatName = "Speed";
-        speed.StatBaseValue = 0;
+        speed.StatBaseValue = 1;
         speed.AddLinker(new RPGStatLinkerBasic(CreateOrGetStat<RPGAttribute>(RPGStatType.Dexterity), 1f));
         speed.UpdateLinkers();
 
         var evasion = CreateOrGetStat<RPGAttribute>(RPGStatType.Evasion);
         evasion.StatName = "Evasion";
-        evasion.StatBaseValue = 0;
+        evasion.StatBaseValue = 1;
         evasion.AddLinker(new RPGStatLinkerBasic(CreateOrGetStat<RPGAttribute>(RPGStatType.Dexterity), 1f));
         evasion.UpdateLinkers();
 
         var willpower = CreateOrGetStat<RPGVital>(RPGStatType.Willpower);
         willpower.StatName = "Willpower";
-        willpower.StatBaseValue = 0;
+        willpower.StatBaseValue = 1;
         willpower.AddLinker(new RPGStatLinkerBasic(CreateOrGetStat<RPGAttribute>(RPGStatType.Will), 10f));
         willpower.UpdateLinkers();
         willpower.SetCurrentValueToMax();

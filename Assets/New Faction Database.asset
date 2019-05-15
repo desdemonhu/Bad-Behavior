@@ -261,7 +261,7 @@ MonoBehaviour:
     relationships: []
     percentJudgeParents: 0
   - id: 12
-    name: Guards
+    name: Guard
     description: 
     color: 0
     parents: 04000000
@@ -277,7 +277,7 @@ MonoBehaviour:
     - factionID: 0
       inheritable: 1
       traits:
-      - 50
+      - -50
     percentJudgeParents: 0
   traitInheritanceType: 0
   relationshipInheritanceType: 0
