@@ -26,6 +26,7 @@ public class CurrentState : MonoBehaviour {
     private bool _isPlayerTurn = true;
     private string saveDataKey;
     private Flowchart flowchart;
+    private Flowchart[] flowcharts;
 
     public void LoadCombat(string combat, string scene, GameObject characters)
     {
@@ -86,10 +87,16 @@ public class CurrentState : MonoBehaviour {
             Debug.Log("Scene loading");
             _player = gameObject;
 
-            _player.GetComponent<AttacksPlayer>().negotiation = FindObjectsOfType<Flowchart>()[1];
-
             inCombat = true;
-            flowchart = _player.GetComponent<AttacksPlayer>().negotiation;
+            flowcharts = FindObjectsOfType<Flowchart>();
+
+        ///Set up Negotiation flowchart
+            foreach(Flowchart v in flowcharts) {
+                if (v.name == "Negotiation"){
+                    flowchart = v;
+                }
+            }
+
             _state = CombatStates.StaminaFilling;
             _targetSelected = false;
             _partyCount = GameObject.FindGameObjectsWithTag("party").Length;
@@ -301,8 +308,7 @@ public class CurrentState : MonoBehaviour {
 
         SceneManager.LoadScene("Start", LoadSceneMode.Single);
         //FungusManager.Instance.SaveManager.Load("save_data");
-        FungusManager.Instance.SaveManager.LoadSpecific("save_data", "AfterCombat");
-        
+        //FungusManager.Instance.SaveManager.LoadSpecific("save_data", "AfterCombat");
 
     }
 

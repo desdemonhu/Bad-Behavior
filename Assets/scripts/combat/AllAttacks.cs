@@ -6,6 +6,7 @@ using Fungus;
 using PixelCrushers.LoveHate;
 
 public class AllAttacks : MonoBehaviour {
+    private const string V = "Negotiation";
     private Dictionary<AttackOptions, Func<GameObject, GameObject, bool>> _allAttacks;
     
     public Dictionary<AttackOptions, Func<GameObject, GameObject, bool>> AttackDic
@@ -139,13 +140,23 @@ public class AllAttacks : MonoBehaviour {
 
     private bool Negotiate(GameObject player, GameObject target)
     {
-        Flowchart flowchart = gameObject.GetComponent<AttacksPlayer>().negotiation;
-        flowchart.SetBooleanVariable("negotiating", true);
-        flowchart.ExecuteBlock(target.name);
+        Flowchart[] flowcharts = FindObjectsOfType<Flowchart>();
+        Flowchart flowchart;
 
-        StartCoroutine(NegotiationTactic(flowchart, target));
-        
+        ///Set up Negotiation flowchart
+        foreach(Flowchart v in flowcharts) {
+            if (v.name == V)
+            {
+                flowchart = v;
+                flowchart.SetBooleanVariable("negotiating", true);
+                flowchart.ExecuteBlock(target.name);
+                StartCoroutine(NegotiationTactic(flowchart, target));
+            }else {
+                Debug.Log("No Negotiations available");
+            }
+        }
         return true;
+        
     }
 
     private bool Willpower(GameObject player, GameObject target)
