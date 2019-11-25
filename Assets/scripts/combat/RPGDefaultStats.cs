@@ -16,7 +16,7 @@ public class RPGDefaultStats : RPGStatCollection
 
         var stamina = CreateOrGetStat<RPGVital>(RPGStatType.Stamina);
         stamina.StatName = "Stamina";
-        stamina.StatBaseValue = 300;
+        stamina.StatBaseValue = 500;
         stamina.SetCurrentValueToMax();
 
         var health = CreateOrGetStat<RPGVital>(RPGStatType.Health);

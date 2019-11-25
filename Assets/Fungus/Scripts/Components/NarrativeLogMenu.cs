@@ -48,6 +48,8 @@ namespace Fungus
                 instance = this;
 
                 GameObject.DontDestroyOnLoad(this);
+                GameObject.DontDestroyOnLoad(GameObject.Find("Characters"));
+                GameObject.DontDestroyOnLoad(GameObject.Find("Enemies"));
 
                 clickAudioSource = GetComponent<AudioSource>();
             }

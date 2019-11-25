@@ -6,6 +6,7 @@ public class AttacksChace : MonoBehaviour {
 
     private AllAttacks attackDic;
     public AttackOptions[] Attacks;
+    public AttackOptions[] Willpowers;
 
 
     // Use this for initialization
@@ -15,6 +16,11 @@ public class AttacksChace : MonoBehaviour {
         Attacks = new AttackOptions[] {
             AttackOptions.Attack,
             AttackOptions.Defend,
+            AttackOptions.Willpower,
+        };
+        Willpowers = new AttackOptions[]
+        {
+            AttackOptions.Distract
         };
     }
 

@@ -18,11 +18,14 @@ public class AllAttacks : MonoBehaviour {
                     { AttackOptions.Attack, BasicAttack },
                     { AttackOptions.Defend, Defending },
                     { AttackOptions.Negotiate, Negotiate },
+                    { AttackOptions.Willpower, Willpower },
+                    { AttackOptions.Distract, Distract }
                 };
             }
             return _allAttacks;
         }
     }
+
 
     private void Awake()
     {
@@ -63,9 +66,11 @@ public class AllAttacks : MonoBehaviour {
             case "Surrender":
                 return AttackOptions.Surrender;
             case "Willpower":
-                return AttackOptions.WillPower;
+                return AttackOptions.Willpower;
             case "Negotiate":
                 return AttackOptions.Negotiate;
+            case "Distract":
+                return AttackOptions.Distract;
             case "None":
                 return AttackOptions.None;
             default: return AttackOptions.None;
@@ -87,21 +92,36 @@ public class AllAttacks : MonoBehaviour {
         }
     }
 
+    public AttackOptions[] GetTargetWillpowers(GameObject target)
+    {
+        switch (target.name)
+        {
+            case "Player":
+                return target.GetComponent<AttacksPlayer>().Willpowers;
+            case "Chace":
+                return target.GetComponent<AttacksChace>().Willpowers;
+            default: return null;
+        }
+    }
+
     private bool BasicAttack(GameObject player, GameObject target)
     {
         Debug.Log("Basic Attack against: " + target.name);
-        var attack = player.GetComponent<RPGDefaultStats>().GetStat<RPGAttribute>(RPGStatType.Attack).StatValue;
-        var dieType = player.GetComponent<RPGDefaultStats>().GetStat<RPGAttribute>(RPGStatType.DieType).StatValue;
-        var rng = UnityEngine.Random.Range(attack, (attack + dieType));
 
-        target.GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Health).StatCurrentValue -= rng;
+        var attack = player.GetComponent<ModifyStats>().GetRPGVitalStat(RPGStatType.Attack).Statvalue;
+        var dieType = player.GetComponent<ModifyStats>().GetRPGAttributeStat(RPGStatType.DieType).StatValue;
+        var rng = UnityEngine.Random.Range(attack, (attack + dieType)) + 1;
+        var newHealth = target.GetComponent<ModifyStats>().GetRPGVitalStat(RPGStatType.Health).StatCurrentValue - rng;
 
-        if(target.GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Health).StatCurrentValue < 1)
+        target.GetComponent<ModifyStats>().ModifyTheStat(RPGStatType.Health, -rng);
+
+        if (target.GetComponent<ModifyStats>().GetRPGVitalStat(RPGStatType.Health).StatCurrentValue < 1)
         {
             Debug.Log(target.name + " is Unconcious");
         } else
         {
             Debug.Log(player.name + " did " + rng + " damage to " + target.name);
+            Debug.Log(target.name + " is at " + target.GetComponent<ModifyStats>().GetRPGVitalStat(RPGStatType.Health).StatCurrentValue + " health");
         }
 
         var tactic = "Attack";
@@ -128,32 +148,69 @@ public class AllAttacks : MonoBehaviour {
         return true;
     }
 
+    private bool Willpower(GameObject player, GameObject target)
+    {
+        Debug.Log("Willpower selected");
+        ///Activate AttackPanelSub
+        var willpowermenu = GameObject.Find("AttackPanelSub");
 
+        bool wait = true;
+        
+        while (wait)
+        {
+            ///Wait till option is chosen
+            if (Input.GetMouseButtonDown(0))
+            {
+                Vector2 ray = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.Raycast(ray, Vector2.zero);
+                if (hit.collider)
+                {
+                    var selection = hit.collider.gameObject;
+                    var method = player.GetComponent<AllAttacks>().GetAttack(selection.name);
+                    Destroy(willpowermenu.gameObject);
+                    var done = false;
+
+                    while (!done)
+                    {
+                        done = method(player, target);
+                        if (done)
+                        {
+                            wait = false;
+                        }
+
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+
+    ///Relationship stuff
     private float CalculateRelationship(string tactic, GameObject target)
     {
              ///TODO Add social stats to negotiation calculation
         var factionDatabase = gameObject.GetComponent<FactionMember>().factionManager.factionDatabase;
         var factionID = factionDatabase.GetFactionID(target.name);
         var socialStats = GameObject.Find("Player").GetComponent<SocialStats>();
-        var mad = 0;
-        var sad = 1;
-        var joy = 2;
+        int neutral = 1;
+        int angry = 2;
+        int afraid = 3;
+        int charmed = 4;
+        int confused = 5;
         float newValue;
 
         switch (tactic)
         {
             case "Flatter":
-                newValue = factionDatabase.GetPersonalityTrait(factionID, joy) + 40 + socialStats.GetStat(SocialStats.SocialStatType.Extroversion).StatValue;
-                if(newValue >= 80) { newValue = 100 ; }
-                factionDatabase.SetPersonalityTrait(target.name, joy, newValue);
-                factionDatabase.SetPersonalityTrait(target.name, sad, 0);
+                newValue = factionDatabase.GetRelationshipTrait(factionID, 0, charmed) + 1;
+                if(newValue < 6) factionDatabase.SetPersonalRelationshipTrait(factionID, 0, charmed, newValue);
+                else factionDatabase.SetPersonalRelationshipTrait(factionID, 0, charmed, 5);
                 break;
             case "Attack":
-                newValue = factionDatabase.GetPersonalityTrait(factionID, mad) + 40;
-                if(newValue >= 80) { newValue = 100; }
-                factionDatabase.SetPersonalityTrait(target.name, mad, newValue);
-                factionDatabase.SetPersonalityTrait(target.name, sad, 0);
-                factionDatabase.SetPersonalityTrait(target.name, joy, 0);
+                newValue = factionDatabase.GetRelationshipTrait(factionID, 0, angry) + 1;
+                if (newValue < 6) factionDatabase.SetPersonalRelationshipTrait(factionID, 0, angry, newValue);
+                else factionDatabase.SetPersonalRelationshipTrait(factionID, 0, angry, 5);
                 break;
             default:
                 newValue = 0;
@@ -161,7 +218,7 @@ public class AllAttacks : MonoBehaviour {
 
         }
 
-        return factionDatabase.GetPersonalityTrait(factionID, joy) - (factionDatabase.GetPersonalityTrait(factionID, mad) + factionDatabase.GetPersonalityTrait(factionID, sad));
+        return newValue;
     }
 
     private void AdjustRelationship(string tactic, GameObject target)
@@ -176,6 +233,14 @@ public class AllAttacks : MonoBehaviour {
         var tactic = flowchart.GetStringVariable("tactic");
         Debug.Log("Tactic: " + tactic);
         AdjustRelationship(tactic, target);
+    }
+
+    private bool Distract(GameObject player, GameObject target)
+    {
+        int statMod = -200;
+        target.GetComponent<ModifyStats>().ModifyTheStat(RPGStatType.Stamina, statMod);
+        Debug.Log("distraction!");
+        return true;
     }
 
 }

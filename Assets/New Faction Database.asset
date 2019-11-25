@@ -29,6 +29,16 @@ MonoBehaviour:
   relationshipTraitDefinitions:
   - name: Affinity
     description: (Required)
+  - name: Neutral
+    description: 
+  - name: Angry
+    description: 
+  - name: Afraid
+    description: 
+  - name: Charmed
+    description: 
+  - name: Confused
+    description: 
   presets: []
   factions:
   - id: 0
@@ -44,7 +54,16 @@ MonoBehaviour:
     - 0
     - 0
     - 0
-    relationships: []
+    relationships:
+    - factionID: 12
+      inheritable: 1
+      traits:
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
     percentJudgeParents: 0
   - id: 4
     name: Good
@@ -109,17 +128,37 @@ MonoBehaviour:
       inheritable: 1
       traits:
       - -15
+      - -15
+      - -15
+      - -15
+      - -15
+      - -15
     - factionID: 6
       inheritable: 1
       traits:
+      - -100
+      - -100
+      - -100
+      - -100
+      - -100
       - -100
     - factionID: 7
       inheritable: 1
       traits:
       - 40
+      - 40
+      - 40
+      - 40
+      - 40
+      - 40
     - factionID: 8
       inheritable: 1
       traits:
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
       - 0
     percentJudgeParents: 0
   - id: 5
@@ -140,17 +179,37 @@ MonoBehaviour:
       inheritable: 1
       traits:
       - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
     - factionID: 6
       inheritable: 1
       traits:
+      - -50
+      - -50
+      - -50
+      - -50
+      - -50
       - -50
     - factionID: 7
       inheritable: 1
       traits:
       - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
     - factionID: 8
       inheritable: 1
       traits:
+      - -20
+      - -20
+      - -20
+      - -20
+      - -20
       - -20
     percentJudgeParents: 0
   - id: 6
@@ -171,17 +230,37 @@ MonoBehaviour:
       inheritable: 1
       traits:
       - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
     - factionID: 5
       inheritable: 1
       traits:
+      - -50
+      - -50
+      - -50
+      - -50
+      - -50
       - -50
     - factionID: 7
       inheritable: 1
       traits:
       - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
     - factionID: 8
       inheritable: 1
       traits:
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
       - 10
     percentJudgeParents: 0
   - id: 7
@@ -202,17 +281,37 @@ MonoBehaviour:
       inheritable: 1
       traits:
       - 50
+      - 50
+      - 50
+      - 50
+      - 50
+      - 50
     - factionID: 5
       inheritable: 1
       traits:
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
       - 10
     - factionID: 6
       inheritable: 1
       traits:
       - -5
+      - -5
+      - -5
+      - -5
+      - -5
+      - -5
     - factionID: 8
       inheritable: 1
       traits:
+      - 70
+      - 70
+      - 70
+      - 70
+      - 70
       - 70
     percentJudgeParents: 0
   - id: 8
@@ -277,7 +376,12 @@ MonoBehaviour:
     - factionID: 0
       inheritable: 1
       traits:
-      - -50
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
     percentJudgeParents: 0
   traitInheritanceType: 0
   relationshipInheritanceType: 0

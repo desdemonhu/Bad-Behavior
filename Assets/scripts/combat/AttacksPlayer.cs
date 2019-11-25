@@ -7,6 +7,7 @@ using Fungus;
 public class AttacksPlayer : MonoBehaviour {
     private AllAttacks attackDic;
     public AttackOptions[] Attacks;
+    public AttackOptions[] Willpowers;
     public Flowchart negotiation;
 
 
@@ -16,13 +17,20 @@ public class AttacksPlayer : MonoBehaviour {
         Attacks = new AttackOptions[] {
             AttackOptions.Attack,
             AttackOptions.Defend,
-            AttackOptions.Negotiate
+            AttackOptions.Negotiate,
+            AttackOptions.Willpower,
         };
+
+        Willpowers = new AttackOptions[]
+        {
+            AttackOptions.Distract
+        };
+
     }
 	
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 
 

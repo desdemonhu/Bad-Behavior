@@ -57,7 +57,6 @@ public class Deeds : MonoBehaviour {
         GameObject player = GameObject.Find("Player");
         var factionID = player.GetComponent<FactionMember>().factionManager.GetFactionID(target.name);
         float newRelationshipNumber = player.GetComponent<FactionMember>().factionManager.GetFaction(factionID).GetPersonalRelationshipTrait(0, 0) + scale;
-        Debug.Log("newRelationshipNumber: " + newRelationshipNumber);
         player.GetComponent<FactionMember>().factionManager.factionDatabase.SetPersonalRelationshipTrait(factionID, 0, 0, newRelationshipNumber);
     }
 

@@ -95,25 +95,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1359428432803452
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4785351065279912}
-  - component: {fileID: 114889029580750264}
-  - component: {fileID: 114991149996365202}
-  - component: {fileID: 114256639980163576}
-  - component: {fileID: 114612697451475254}
-  m_Layer: 0
-  m_Name: Chace
-  m_TagString: party
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1518044143852246
 GameObject:
   m_ObjectHideFlags: 0
@@ -132,9 +113,48 @@ GameObject:
   - component: {fileID: 114659545289541636}
   - component: {fileID: 114388770713351886}
   - component: {fileID: 114773135231660388}
+  - component: {fileID: 114516744757681344}
   m_Layer: 0
   m_Name: Player
   m_TagString: party
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1589333941693924
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4763998725249930}
+  - component: {fileID: 114581621657296290}
+  - component: {fileID: 114594231498377606}
+  - component: {fileID: 114975618572584406}
+  - component: {fileID: 114621969372495042}
+  - component: {fileID: 114450493518037038}
+  - component: {fileID: 114206200242969952}
+  - component: {fileID: 114777052987047712}
+  m_Layer: 0
+  m_Name: Chace
+  m_TagString: party
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1683746676567814
+GameObject:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4406640425407356}
+  - component: {fileID: 212739405017621262}
+  m_Layer: 5
+  m_Name: Image-Chace
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -188,22 +208,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1872277689442768
-GameObject:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4048611176341382}
-  - component: {fileID: 212589295975158762}
-  m_Layer: 0
-  m_Name: Image-Chace
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1918586048514276
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,19 +225,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4048611176341382
-Transform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1872277689442768}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.8000002, y: -0.07000001, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4785351065279912}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4052790485066156
 Transform:
   m_ObjectHideFlags: 1
@@ -245,7 +236,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4805610469805434}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4077953210896004
 Transform:
@@ -258,7 +249,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4805610469805434}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4216009702002442
 Transform:
@@ -271,7 +262,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4805610469805434}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4311619539614654
 Transform:
@@ -286,6 +277,19 @@ Transform:
   m_Father: {fileID: 4805610469805434}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4406640425407356
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1683746676567814}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 7.81, y: -3.1, z: 0}
+  m_LocalScale: {x: 0.5236774, y: 0.5236774, z: 0.5236774}
+  m_Children: []
+  m_Father: {fileID: 4763998725249930}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4420572103839792
 Transform:
   m_ObjectHideFlags: 1
@@ -297,7 +301,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4805610469805434}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4556424166466116
 Transform:
@@ -310,7 +314,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4805610469805434}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4688055076845556
 Transform:
@@ -323,21 +327,21 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4805610469805434}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4785351065279912
+--- !u!4 &4763998725249930
 Transform:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1359428432803452}
+  m_GameObject: {fileID: 1589333941693924}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 2.5608616, y: 0.22850387, z: 0.00390625}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4048611176341382}
+  - {fileID: 4406640425407356}
   m_Father: {fileID: 4805610469805434}
-  m_RootOrder: 1
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4805610469805434
 Transform:
@@ -350,7 +354,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4311619539614654}
-  - {fileID: 4785351065279912}
   - {fileID: 4688055076845556}
   - {fileID: 224496580303937192}
   - {fileID: 4077953210896004}
@@ -358,6 +361,7 @@ Transform:
   - {fileID: 4052790485066156}
   - {fileID: 4420572103839792}
   - {fileID: 4556424166466116}
+  - {fileID: 4763998725249930}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -632,6 +636,17 @@ MonoBehaviour:
   portraitsFace: 0
   setSayDialog: {fileID: 0}
   description: 
+--- !u!114 &114206200242969952
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1589333941693924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7416bd32b71178b44986a7e03b3647d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114215548276518374
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -650,20 +665,6 @@ MonoBehaviour:
   portraitsFace: 0
   setSayDialog: {fileID: 0}
   description: 
---- !u!114 &114256639980163576
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1359428432803452}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea314ebf1e66cf6479b572a11dfc58ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stats: {fileID: 0}
-  socialStats: {fileID: 0}
-  playerStatus: {fileID: 0}
 --- !u!114 &114274853741593074
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -873,6 +874,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Attacks: 
+  Willpowers: 
   negotiation: {fileID: 0}
 --- !u!114 &114418647558622824
 MonoBehaviour:
@@ -889,6 +891,17 @@ MonoBehaviour:
   witnessesPerUpdate: 1
   canWitnessSelf: 1
   debug: 1
+--- !u!114 &114450493518037038
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1589333941693924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20db9643f0c7dee4ea999a64d3650766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114481854865094174
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -908,6 +921,17 @@ MonoBehaviour:
   portraitsFace: 0
   setSayDialog: {fileID: 0}
   description: 
+--- !u!114 &114516744757681344
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1518044143852246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf2104b05184414592e9dda23adfa9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114532620392425762
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1019,6 +1043,24 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   debugEvalFunc: 0
+--- !u!114 &114581621657296290
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1589333941693924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25fb867d2049d41f597aefdd6b19f598, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nameText: Tao Chace
+  nameColor: {r: 1, g: 1, b: 1, a: 1}
+  soundEffect: {fileID: 0}
+  portraits: []
+  portraitsFace: 0
+  setSayDialog: {fileID: 0}
+  description: 
 --- !u!114 &114591965327935374
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1033,18 +1075,112 @@ MonoBehaviour:
   dimension: 0
   deedTemplateLibrary: {fileID: 11400000, guid: 4156d4596f4a6f040af7b1ba49d874e0,
     type: 2}
---- !u!114 &114612697451475254
+--- !u!114 &114594231498377606
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1359428432803452}
+  m_GameObject: {fileID: 1589333941693924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5145a52ccbad050458190335535faa5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  factionManager: {fileID: 114418647558622824}
+  factionDatabase: {fileID: 11400000, guid: c5a7ed5cba8d1d74bb8caa210e2865c4, type: 2}
+  factionID: 1
+  pad:
+    happiness: 0
+    pleasure: 0
+    arousal: 0
+    dominance: 0
+    excitabilityThreshold: 20
+  impressionability: 0
+  traitAlignmentImportance: 50
+  arousalImportance: 50
+  deedImpactThreshold: 5
+  acclimatizationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 20
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  powerDifferenceCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -10
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 10
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxMemories: 50
+  shortTermMemoryDuration: 300
+  longTermMemoryDuration: 3600
+  memoryCleanupFrequency: 2
+  sortMemories: 0
+  shortTermMemory: []
+  longTermMemory: []
+  eyes: {fileID: 0}
+  sightLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  debugEvalFunc: 0
+--- !u!114 &114621969372495042
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1589333941693924}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a5914c7b571af7341a10789715d7adce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Attacks: 
+  Attacks: 0100000002000000
+  Willpowers: 
 --- !u!114 &114651391932692472
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1211,24 +1347,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4e55546bd104d64782da70c5ac78bbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114889029580750264
+--- !u!114 &114777052987047712
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1359428432803452}
+  m_GameObject: {fileID: 1589333941693924}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25fb867d2049d41f597aefdd6b19f598, type: 3}
+  m_Script: {fileID: 11500000, guid: ddf2104b05184414592e9dda23adfa9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameText: Tao Chace
-  nameColor: {r: 1, g: 1, b: 1, a: 1}
-  soundEffect: {fileID: 0}
-  portraits: []
-  portraitsFace: 0
-  setSayDialog: {fileID: 0}
-  description: 
 --- !u!114 &114958848799104822
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1322,105 +1451,27 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   debugEvalFunc: 0
---- !u!114 &114991149996365202
+--- !u!114 &114975618572584406
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1359428432803452}
+  m_GameObject: {fileID: 1589333941693924}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5145a52ccbad050458190335535faa5b, type: 3}
+  m_Script: {fileID: 11500000, guid: ea314ebf1e66cf6479b572a11dfc58ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  factionManager: {fileID: 114418647558622824}
-  factionDatabase: {fileID: 11400000, guid: c5a7ed5cba8d1d74bb8caa210e2865c4, type: 2}
-  factionID: 1
-  pad:
-    happiness: 0
-    pleasure: 0
-    arousal: 0
-    dominance: 0
-    excitabilityThreshold: 20
-  impressionability: 0
-  traitAlignmentImportance: 50
-  arousalImportance: 50
-  deedImpactThreshold: 5
-  acclimatizationCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 20
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  powerDifferenceCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: -10
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0.1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 10
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  maxMemories: 50
-  shortTermMemoryDuration: 300
-  longTermMemoryDuration: 3600
-  memoryCleanupFrequency: 2
-  sortMemories: 0
-  shortTermMemory: []
-  longTermMemory: []
-  eyes: {fileID: 0}
-  sightLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  debugEvalFunc: 0
---- !u!212 &212589295975158762
+  stats: {fileID: 0}
+  socialStats: {fileID: 0}
+  playerStatus: {fileID: 0}
+  Player: {fileID: 1518044143852246}
+--- !u!212 &212739405017621262
 SpriteRenderer:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1872277689442768}
+  m_GameObject: {fileID: 1683746676567814}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -1449,7 +1500,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: b5671699de03ace439840c2497b15cac, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1526,7 +1577,7 @@ RectTransform:
   m_Children:
   - {fileID: 4925578806628784}
   m_Father: {fileID: 4805610469805434}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

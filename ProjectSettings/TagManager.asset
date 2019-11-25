@@ -13,6 +13,8 @@ TagManager:
   - Laser
   - Negotiate
   - Emotion
+  - Willpower
+  - Distract
   layers:
   - Default
   - TransparentFX

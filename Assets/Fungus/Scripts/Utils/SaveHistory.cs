@@ -89,6 +89,16 @@ namespace Fungus
             }
         }
 
+        public void LoadSpecificSavePoint(string savePointKey)
+        {
+            if (savePoints.Count > 0)
+            {
+                int index = savePoints.IndexOf(savePointKey);
+                var savePointData = savePoints[index];
+                SavePointData.Decode(savePointData);
+            }
+        }
+
         /// <summary>
         /// Clears all Save Points.
         /// </summary>

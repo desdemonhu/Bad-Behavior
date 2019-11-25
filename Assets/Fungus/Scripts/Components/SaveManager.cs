@@ -134,6 +134,15 @@ namespace Fungus
             }
         }
 
+        protected virtual void LoadSpecificSavedGame(string saveDataKey, string saveHistoryKey)
+        {
+            if (ReadSaveHistory(saveDataKey))
+            {
+                saveHistory.ClearRewoundSavePoints();
+                saveHistory.LoadSpecificSavePoint(saveHistoryKey);
+            }
+        }
+
         // Scene loading in Unity is asynchronous so we need to take care to avoid race conditions. 
         // The following callbacks tell us when a scene has been loaded and when 
         // a saved game has been loaded. We delay taking action until the next 
@@ -232,6 +241,14 @@ namespace Fungus
             loadAction = () => LoadSavedGame(key);
         }
 
+        public void LoadSpecific(string saveDataKey, string saveHistoryKey)
+        {
+            // Set a load action to be executed on next update
+            var key = saveDataKey;
+            var historyKey = saveHistoryKey;
+            loadAction = () => LoadSpecificSavedGame(key, historyKey); 
+        }
+
         /// <summary>
         /// Deletes a previously stored Save History from persistent storage.
         /// </summary>
@@ -317,6 +334,7 @@ namespace Fungus
         {
             return saveHistory.GetDebugInfo();
         }
+
 
 #endregion
     }

@@ -42,23 +42,35 @@ public class AttacksEnemy : MonoBehaviour {
         }
     }
 
-    public AttackOptions AttackPattern(float affinity)
+    public AttackOptions AttackPattern(Dictionary<Emotions, float> affinity)
     {
-        if(enemy == EnemyType.Guard)
+        List<Emotions> primaryEmotions = new List<Emotions>();
+        float neutral = affinity[Emotions.Neutral];
+        float angry = affinity[Emotions.Angry];
+        float afraid = affinity[Emotions.Afraid];
+        float charmed = affinity[Emotions.Charmed];
+        float confused = affinity[Emotions.Confused];
+
+        if (enemy == EnemyType.Guard)
         {
-            if (affinity <= 10)
-            {
-                return AttackOptions.Attack;
-            }
-            else
-            {
-                return AttackOptions.Defend;
-            }
+            ///set what counts as affinity
+            ///
+            if (angry > 0) primaryEmotions.Add(Emotions.Angry);
+            if (afraid > 2) primaryEmotions.Add(Emotions.Afraid);
+            if (charmed > 2) primaryEmotions.Add(Emotions.Charmed);
+            if (confused > 2) primaryEmotions.Add(Emotions.Confused);
+            if (neutral > -1) primaryEmotions.Add(Emotions.Neutral);
+
+            ///Find highest and second highest
+
+            /// return corosponding attack
+            /// 
+            if (primaryEmotions.Contains(Emotions.Angry)) return AttackOptions.Attack;
+            else if (primaryEmotions.Contains(Emotions.Afraid)) return AttackOptions.Defend;
+            else return AttackOptions.Attack;
         }
-       else
-        {
-            return AttackOptions.Attack;
-        }
+
+        return AttackOptions.None;
 
     }
 }

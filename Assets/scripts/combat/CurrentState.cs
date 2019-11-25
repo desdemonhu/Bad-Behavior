@@ -11,10 +11,12 @@ using Fungus;
 public class CurrentState : MonoBehaviour {
 
     public bool inCombat = false;
+    private GameObject _attackPanelSub;
     private GameObject[] targets; 
     private GameObject _currentPlayer;
     private GameObject _currentTarget;
     private GameObject _lastPlayer;
+    private GameObject _player;
     private bool _targetSelected;
     private int _enemyCount;
     private int _enemyDead = 0;
@@ -22,7 +24,15 @@ public class CurrentState : MonoBehaviour {
     private int _partyDead = 0;
     private string _action;
     private bool _isPlayerTurn = true;
+    private string saveDataKey;
     private Flowchart flowchart;
+
+    public void LoadCombat(string combat, string scene, GameObject characters)
+    {
+        saveDataKey = scene;
+        SceneManager.LoadScene(combat, LoadSceneMode.Single);
+    }
+    
 
     public string Action
     {
@@ -66,10 +76,20 @@ public class CurrentState : MonoBehaviour {
     // Use this for initialization
     void OnLevelLoaded (Scene scene, LoadSceneMode mode) {
 
-        if(scene.name.StartsWith("Combat"))
+        if (scene.name.StartsWith("Start"))
         {
+            //FungusManager.Instance.SaveManager.Load("save_data");
+        }
+
+        if (scene.name.StartsWith("Combat"))
+        {
+            Debug.Log("Scene loading");
+            _player = gameObject;
+
+            _player.GetComponent<AttacksPlayer>().negotiation = FindObjectsOfType<Flowchart>()[1];
+
             inCombat = true;
-            flowchart = gameObject.GetComponent<AttacksPlayer>().negotiation;
+            flowchart = _player.GetComponent<AttacksPlayer>().negotiation;
             _state = CombatStates.StaminaFilling;
             _targetSelected = false;
             _partyCount = GameObject.FindGameObjectsWithTag("party").Length;
@@ -129,24 +149,22 @@ public class CurrentState : MonoBehaviour {
         }
 
         ///Set new emotion
+        ///
         GameObject.Find(bubble).transform.Find(emotion).gameObject.SetActive(true);
     }
 
 
-    private string CalculateAffinity(float affinity)
+    private string CalculateAffinity(Dictionary<Emotions, float> affinity)
     {
-        if(affinity < -10) { return "Mad"; }
-        else if( -39 < affinity && affinity <= 0) { return "Sad"; }
-        else { return "Joy"; }
+        ///Calculate Primary Emotion
+        ///
+       return affinity.Aggregate((l, r) => l.Value > r.Value ? l : r).Key.ToString();
     }
 
     private void ActionChangeHandler(string newVal)
     {
-        Debug.Log("Getting Action: " + newVal);
         GetAttack();
-    }
-
-    
+    }    
 
     private void VariableChangeHandler(CombatStates newVal)
     {
@@ -195,13 +213,12 @@ public class CurrentState : MonoBehaviour {
     {
         if (_state == CombatStates.CheckingStamina)
         {
-            Debug.Log("Checking Stamina");
             List<GameObject> ready = new List<GameObject>();
             int order = 0;
 
             for (var i = 0; i < targets.Length; i++)
             {
-                var stamina = targets[i].GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Stamina);
+                var stamina = targets[i].GetComponent<ModifyStats>().GetRPGVitalStat(RPGStatType.Stamina);
 
                 if (stamina.StatCurrentValue >= stamina.StatBaseValue)
                 {
@@ -211,9 +228,10 @@ public class CurrentState : MonoBehaviour {
             Debug.Log("Ready queue: " + ready.Count);
             if(ready.Count > 1)
             {
+                ///TODO: CHANGE THIS SO IT PULLS FROM CURRENT STAT
                 ///Do them in order of speed
-                
-                List<GameObject> sortedReady = ready.OrderByDescending(o => o.GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Speed)).ToList();
+                ///
+                List<GameObject> sortedReady = ready;
 
                 if (_lastPlayer)
                 {
@@ -222,7 +240,6 @@ public class CurrentState : MonoBehaviour {
                         order += 1;
                     }
                 }
-                Debug.Log("Order: " + order);
                 _currentPlayer = sortedReady[order];
                 VariableChangeHandler(CombatStates.CharacterTurn);
                 return;
@@ -242,17 +259,17 @@ public class CurrentState : MonoBehaviour {
 
     private void Attacking()
     {
-        _currentPlayer.GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Stamina).StatCurrentValue = 0;
+        _currentPlayer.GetComponent<ModifyStats>().ModifyTheStat(RPGStatType.Stamina, -_currentPlayer.GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Stamina).StatBaseValue);
 
         foreach (var target in targets)
         {
-            if (target.GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Health).StatCurrentValue <= 0)
+            if (target.GetComponent<ModifyStats>().GetRPGVitalStat(RPGStatType.Health).StatCurrentValue <= 0)
             {
 
                 ///Mark as dead
-                if(target.GetComponent<RPGDefaultStats>().GetStat<RPGAttribute>(RPGStatType.Alive).StatValue < 1)
+                if(target.GetComponent<ModifyStats>().GetRPGAttributeStat(RPGStatType.Alive).StatValue < 1)
                 {
-                    target.GetComponent<RPGDefaultStats>().GetStat<RPGAttribute>(RPGStatType.Alive).StatBaseValue = 1;
+                    target.GetComponent<ModifyStats>().GetRPGAttributeStat(RPGStatType.Alive).StatBaseValue = 1;
                     if (target.tag == "enemy")
                     {
                         _enemyDead += 1;
@@ -279,6 +296,14 @@ public class CurrentState : MonoBehaviour {
         GameObject screen = (GameObject)Instantiate(Resources.Load("Prefabs/CombatWon"));
         screen.transform.SetParent(GameObject.Find("Canvas").transform, false);
         inCombat = false;
+
+        //TODO: Set up experience menu
+
+        SceneManager.LoadScene("Start", LoadSceneMode.Single);
+        //FungusManager.Instance.SaveManager.Load("save_data");
+        FungusManager.Instance.SaveManager.LoadSpecific("save_data", "AfterCombat");
+        
+
     }
 
     private void BattleLost()
@@ -321,6 +346,7 @@ public class CurrentState : MonoBehaviour {
                 {
                     Vector2 ray = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     RaycastHit2D hit = Physics2D.Raycast(ray, Vector2.zero);
+
                     if (hit.collider)
                     {
                         Debug.Log("This is the attack: " + action);
@@ -356,6 +382,11 @@ public class CurrentState : MonoBehaviour {
         attackCanvas.name = "AttackPanel";
         var attackCanvasPosition = attackCanvas.GetComponent<RectTransform>().position;
 
+        ///AttackPanelSub
+        _attackPanelSub = GameObject.Find("AttackPanelSub");
+        _attackPanelSub.name = "AttackPanelSub";
+        var willpowerCanvasPosition = _attackPanelSub.GetComponent<RectTransform>().position;
+
         ///Charater Portrait Setup
         var attackerImage = _currentPlayer.GetComponentInChildren<SpriteRenderer>().name;
         GameObject attacker = (GameObject)Instantiate(Resources.Load("Prefabs/" + attackerImage));
@@ -365,7 +396,10 @@ public class CurrentState : MonoBehaviour {
         attackCanvasPosition.y = Screen.height / 2;
         attackerPosition.x = 100;
 
+        willpowerCanvasPosition.y = Screen.height / 2;
+
         AttackOptions[] attacks = _currentPlayer.GetComponent<AllAttacks>().GetTargetAttacks(_currentPlayer);
+        AttackOptions[] willpowers = _currentPlayer.GetComponent<AllAttacks>().GetTargetWillpowers(_currentPlayer);
 
         ///Attack Buttons setup
         for (var i = 0; i < attacks.Length; i++)
@@ -396,8 +430,39 @@ public class CurrentState : MonoBehaviour {
 
         }
 
+        ///Willpower Buttons setup
+        for (var i = 0; i < willpowers.Length; i++)
+        {
+
+            GameObject button = (GameObject)Instantiate(Resources.Load("Prefabs/Button"));
+            var buttonPosition = button.GetComponent<RectTransform>().position;
+            var buttonHeight = button.GetComponent<RectTransform>().rect.height;
+
+            if (i == 0)
+            {
+                buttonPosition.y = _attackPanelSub.transform.up.y;
+                buttonBase = buttonPosition.y - (buttonHeight + 10);
+            }
+            else
+            {
+                buttonPosition.y = buttonBase;
+                buttonBase -= buttonHeight + 10;
+            }
+
+            button.GetComponent<RectTransform>().SetPositionAndRotation(buttonPosition, (button.GetComponent<RectTransform>().localRotation));
+            button.transform.SetParent(GameObject.Find("AttackPanelSub").transform, false);
+            button.GetComponentInChildren<Text>().text = willpowers[i].ToString();
+            button.name = willpowers[i].ToString();
+            button.tag = willpowers[i].ToString();
+
+        }
+
         ///Set Canvas and Character position
+        ///
+        _attackPanelSub.SetActive(false);
         attackCanvas.GetComponent<RectTransform>().SetPositionAndRotation(attackCanvasPosition, attackCanvas.GetComponent<RectTransform>().localRotation);
+
+        _attackPanelSub.GetComponent<RectTransform>().SetPositionAndRotation(willpowerCanvasPosition, _attackPanelSub.GetComponent<RectTransform>().localRotation);
 
         attacker.GetComponent<Transform>().SetPositionAndRotation(attackerPosition, attacker.GetComponent<Transform>().localRotation);
     }
@@ -405,22 +470,36 @@ public class CurrentState : MonoBehaviour {
     private void EnemyAction()
     {
         ///Check for _currentPlayer anger, love and fear
-        float affinity = GetAffinity(_currentPlayer);
+        Dictionary<Emotions, float> affinity = GetAffinity(_currentPlayer);
 
         ///Get attack pattern based on affinity
         Action = EnemyAttackPattern(affinity).ToString();
     }
 
-    private float GetAffinity(GameObject target)
+    private Dictionary<Emotions, float> GetAffinity(GameObject target)
     {
-        GameObject player = GameObject.Find("Player");
-        var factionID = player.GetComponent<FactionMember>().factionManager.GetFactionID(target.name);
+        var factionID = _player.GetComponent<FactionMember>().factionManager.GetFactionID(target.name);
 
-        return player.GetComponent<FactionMember>().factionManager.GetFaction(factionID).GetPersonalRelationshipTrait(0, 0);
+        float neutral = target.GetComponent<FactionMember>().factionManager.GetFaction(factionID).GetPersonalRelationshipTrait(0, 1);
+        float angry = target.GetComponent<FactionMember>().factionManager.GetFaction(factionID).GetPersonalRelationshipTrait(0, 2);
+        float afraid = target.GetComponent<FactionMember>().factionManager.GetFaction(factionID).GetPersonalRelationshipTrait(0, 3);
+        float charmed = target.GetComponent<FactionMember>().factionManager.GetFaction(factionID).GetPersonalRelationshipTrait(0, 4);
+        float confused = target.GetComponent<FactionMember>().factionManager.GetFaction(factionID).GetPersonalRelationshipTrait(0, 5);
+
+        Dictionary<Emotions, float> affinity = new Dictionary<Emotions, float>
+        {
+            {Emotions.Angry, angry },
+            {Emotions.Afraid, afraid },
+            {Emotions.Charmed, charmed },
+            {Emotions.Confused, confused },
+            { Emotions.Neutral, neutral },
+        };
+
+        return affinity;
 
     }
 
-    private AttackOptions EnemyAttackPattern(float affinity)
+    private AttackOptions EnemyAttackPattern(Dictionary<Emotions, float> affinity)
     {
         return _currentPlayer.GetComponent<AttacksEnemy>().AttackPattern(affinity);
     }
@@ -429,11 +508,11 @@ public class CurrentState : MonoBehaviour {
     {
         if(_enemyDead < _enemyCount && _partyDead < _partyCount)
         {
-            if (_currentPlayer.tag == "party" && _currentPlayer.GetComponent<RPGDefaultStats>().GetStat<RPGAttribute>(RPGStatType.Alive).StatValue < 1)
+            if (_currentPlayer.tag == "party" && _currentPlayer.GetComponent<ModifyStats>().GetRPGAttributeStat(RPGStatType.Alive).StatValue < 1)
             {
                 PartyAction();
             }
-            else if(_currentPlayer.tag == "enemy" && _currentPlayer.GetComponent<RPGDefaultStats>().GetStat<RPGAttribute>(RPGStatType.Alive).StatValue < 1 && !_isPlayerTurn)
+            else if(_currentPlayer.tag == "enemy" && _currentPlayer.GetComponent<ModifyStats>().GetRPGAttributeStat(RPGStatType.Alive).StatValue < 1 && !_isPlayerTurn)
             {
                 EnemyAction();
             }
@@ -464,15 +543,20 @@ public class CurrentState : MonoBehaviour {
             _isPlayerTurn = flowchart.GetBooleanVariable("negotiating");
             StartCoroutine(WaitInput(true, _currentPlayer, _currentTarget, Action, _targetSelected, VariableChangeHandler, _isPlayerTurn));
 
-            if(_currentPlayer && _currentPlayer.tag == "party")
+            if(_currentPlayer && _currentPlayer.tag == "party" )
             {
                 var canvas = GameObject.Find("Canvas");
                 var buttons = canvas.GetComponentsInChildren<Button>();
                 var attackPanel = GameObject.Find("AttackPanel");
-                Debug.Log("Current Player: " + _currentPlayer.name);
                 var attacker = GameObject.Find(_currentPlayer.GetComponentInChildren<SpriteRenderer>().name + "(Clone)");
+
                 for (var i = buttons.Length - 1; i > -1; i--)
                 {
+                    if(Action == "Willpower")
+                    {
+                        _attackPanelSub.SetActive(true);
+                        _attackPanelSub.transform.SetParent(canvas.transform, false);
+                    }
                     Destroy(buttons[i].gameObject);
                     Destroy(attackPanel.gameObject);
                     Destroy(attacker.gameObject);
@@ -484,7 +568,6 @@ public class CurrentState : MonoBehaviour {
 
     private void SelectCharacter()
     {
-       Debug.Log("Selecting character: " + _currentPlayer.name);
        VariableChangeHandler(CombatStates.SelectAction);
     }
 
@@ -495,20 +578,19 @@ public class CurrentState : MonoBehaviour {
 
             foreach (var target in targets)
             {
-                var stamina = target.GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Stamina);
-                var speed = target.GetComponent<RPGDefaultStats>().GetStat<RPGAttribute>(RPGStatType.Speed).StatValue;
+                var staminaStat = target.GetComponent<ModifyStats>().GetRPGVitalStat(RPGStatType.Stamina);
+                var stamina = staminaStat.StatCurrentValue;
+                var speed = target.GetComponent<ModifyStats>().GetRPGAttributeStat(RPGStatType.Speed).StatValue;
 
-                if(stamina.StatCurrentValue >= stamina.StatBaseValue)
+                if(stamina >= staminaStat.StatBaseValue)
                 {
                     VariableChangeHandler(CombatStates.CheckingStamina);
-                    //_currentPlayer = target;
-                    //VariableChangeHandler(CombatStates.CharacterTurn);
                     return;
                 }
-                else if (stamina.StatCurrentValue < stamina.StatBaseValue)
+                else if (stamina < staminaStat.StatBaseValue && _state == CombatStates.StaminaFilling)
                 {
                     ///Set emotion for enemeies
-                    if(stamina.StatCurrentValue * 2 >= stamina.StatBaseValue)
+                    if(stamina * 2 >= staminaStat.StatBaseValue)
                     {
                         if (target.tag == "enemy")
                         {
@@ -516,20 +598,12 @@ public class CurrentState : MonoBehaviour {
                             SetEmotion(target);
                         }
                     }
-                    stamina.StatCurrentValue += speed;
-                    if(stamina.StatCurrentValue >= stamina.StatBaseValue)
+                    target.GetComponent<ModifyStats>().ModifyTheStat(RPGStatType.Stamina, speed);
+
+                    if(stamina >= staminaStat.StatBaseValue)
                     { VariableChangeHandler(CombatStates.CheckingStamina);
                         return;
                     }
-                    //for(var i = 0; i < targets.Length; i++)
-                    //{
-                    //    if(targets[i].GetComponent<RPGDefaultStats>().GetStat<RPGVital>(RPGStatType.Stamina).StatCurrentValue >= stamina.StatBaseValue)
-                    //    {
-                    //        _currentPlayer = targets[i];
-                    //        VariableChangeHandler(CombatStates.CharacterTurn);
-                    //        return;
-                    //    }
-                    //}
                 }
             }
         }
