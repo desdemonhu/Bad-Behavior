@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using PixelCrushers.LoveHate;
@@ -10,6 +11,7 @@ using Fungus;
 
 public class CurrentState : MonoBehaviour {
 
+    public static CurrentState Instance;
     public bool inCombat = false;
     private GameObject _attackPanelSub;
     private GameObject[] targets; 
@@ -42,7 +44,10 @@ public class CurrentState : MonoBehaviour {
         {
             _action = value;
             if(OnActionChange != null)
+            {
                 OnActionChange(_action);
+            }
+                
         }
     }
 
@@ -86,8 +91,8 @@ public class CurrentState : MonoBehaviour {
         {
             Debug.Log("Scene loading");
             _player = gameObject;
-
             inCombat = true;
+            Instance = this;
             flowcharts = FindObjectsOfType<Flowchart>();
 
         ///Set up Negotiation flowchart
@@ -323,7 +328,10 @@ public class CurrentState : MonoBehaviour {
 
     public static IEnumerator WaitInput(bool wait, GameObject _currentPlayer, GameObject _currentTarget, string action, bool _targetSelected, Action<CombatStates> VariableChangeHandler, bool _isPlayerTurn)
     {
+        string finalAttack = action == "Willpower" ? CurrentState.Instance.Willpower() : action;
+        Debug.Log("FinalAttack is: " + finalAttack);
         bool finished = false;
+
         while (wait)
         {
             if (_currentPlayer.tag == "enemy")
@@ -337,6 +345,7 @@ public class CurrentState : MonoBehaviour {
                 var method = _currentPlayer.GetComponent<AllAttacks>().GetAttack(action);
                 while (!finished)
                 {
+
                     finished = method(_currentPlayer, _currentTarget);
                     if (finished)
                     {
@@ -358,7 +367,7 @@ public class CurrentState : MonoBehaviour {
                         Debug.Log("This is the attack: " + action);
                         _currentTarget = hit.collider.gameObject;
                         Debug.Log("Current Target: " + _currentTarget);
-                        var method = _currentPlayer.GetComponent<AllAttacks>().GetAttack(action);
+                        var method = _currentPlayer.GetComponent<AllAttacks>().GetAttack(finalAttack);
                         
                         while (!finished)
                         {
@@ -378,6 +387,41 @@ public class CurrentState : MonoBehaviour {
         }
 
     }
+
+    public string Willpower(){
+        var willpowermenu = GameObject.Find("AttackPanelSub");
+        string willpowerAttack = "";
+        bool wait = true;
+        
+        while (wait)
+        {
+            List<RaycastResult> hits = IsSelectingWillpower();
+
+            if(hits.Count > 0) {
+                foreach(var hit in hits){
+                    if(hit.gameObject.tag != "party"){
+                        Debug.Log("Name of object you clicked on: " + hit.gameObject.name);
+
+                        willpowerAttack = hit.gameObject.name.ToString();
+                        Destroy(willpowermenu.gameObject);
+                        wait = false;
+                    }
+                }
+
+            }
+        }
+        return willpowerAttack;
+    }
+
+    ///Looks to see if click has multiple hits
+    private List<RaycastResult> IsSelectingWillpower(){
+        PointerEventData eventDataCurrentPostion = new PointerEventData(EventSystem.current);
+        eventDataCurrentPostion.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPostion, results);
+        return results;
+    }
+
 
     private void PartyAction()
     {
@@ -549,22 +593,29 @@ public class CurrentState : MonoBehaviour {
             _isPlayerTurn = flowchart.GetBooleanVariable("negotiating");
             StartCoroutine(WaitInput(true, _currentPlayer, _currentTarget, Action, _targetSelected, VariableChangeHandler, _isPlayerTurn));
 
-            if(_currentPlayer && _currentPlayer.tag == "party" )
+            if (!_currentPlayer || _currentPlayer.tag != "party")
             {
-                var canvas = GameObject.Find("Canvas");
-                var buttons = canvas.GetComponentsInChildren<Button>();
-                var attackPanel = GameObject.Find("AttackPanel");
-                var attacker = GameObject.Find(_currentPlayer.GetComponentInChildren<SpriteRenderer>().name + "(Clone)");
-
-                for (var i = buttons.Length - 1; i > -1; i--)
+            }
+            else
+            {
+                for (var i = GameObject.Find("Canvas").GetComponentsInChildren<Button>().Length - 1; i > -1; i--)
                 {
-                    if(Action == "Willpower")
+                    if (_action == "Willpower")
                     {
                         _attackPanelSub.SetActive(true);
-                        _attackPanelSub.transform.SetParent(canvas.transform, false);
+                        _attackPanelSub.transform.SetParent(GameObject.Find("Canvas").transform, false);
                     }
-                    Destroy(buttons[i].gameObject);
-                    Destroy(attackPanel.gameObject);
+
+                    Destroy(GameObject.Find("Canvas").GetComponentsInChildren<Button>()[i].gameObject);
+
+                    var attackPanel = GameObject.Find("AttackPanel");
+                    if(!attackPanel) {
+                        var willpowerPanel = GameObject.Find("AttackPanelSub");
+                        Destroy(willpowerPanel.gameObject);
+                    } else {
+                        Destroy(attackPanel.gameObject);
+                    }
+                    var attacker = GameObject.Find(_currentPlayer.GetComponentInChildren<SpriteRenderer>().name + "(Clone)");
                     Destroy(attacker.gameObject);
                 }
             }

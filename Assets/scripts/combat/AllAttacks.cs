@@ -19,7 +19,7 @@ public class AllAttacks : MonoBehaviour {
                     { AttackOptions.Attack, BasicAttack },
                     { AttackOptions.Defend, Defending },
                     { AttackOptions.Negotiate, Negotiate },
-                    { AttackOptions.Willpower, Willpower },
+                    // { AttackOptions.Willpower, Willpower },
                     { AttackOptions.Distract, Distract }
                 };
             }
@@ -45,7 +45,6 @@ public class AllAttacks : MonoBehaviour {
 
     public Func<GameObject,GameObject, bool> GetAttack(string attack)
     {
-        Debug.Log(attack);
         AttackOptions attackType = GetAttackOption(attack);
         Debug.Log("Attack Type: " + attackType);
         if (ContainAttack(attackType))
@@ -72,8 +71,6 @@ public class AllAttacks : MonoBehaviour {
                 return AttackOptions.Negotiate;
             case "Distract":
                 return AttackOptions.Distract;
-            case "None":
-                return AttackOptions.None;
             default: return AttackOptions.None;
         }
     }
@@ -159,43 +156,75 @@ public class AllAttacks : MonoBehaviour {
         
     }
 
-    private bool Willpower(GameObject player, GameObject target)
-    {
-        Debug.Log("Willpower selected");
-        ///Activate AttackPanelSub
-        var willpowermenu = GameObject.Find("AttackPanelSub");
+    
 
-        bool wait = true;
+    // private bool Willpower(GameObject player, GameObject target)
+    // {
+    //     ///Activate AttackPanelSub
+    //     var willpowermenu = GameObject.Find("AttackPanelSub");
+
+    //     bool wait = true;
         
-        while (wait)
-        {
-            ///Wait till option is chosen
-            if (Input.GetMouseButtonDown(0))
-            {
-                Vector2 ray = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.Raycast(ray, Vector2.zero);
-                if (hit.collider)
-                {
-                    var selection = hit.collider.gameObject;
-                    var method = player.GetComponent<AllAttacks>().GetAttack(selection.name);
-                    Destroy(willpowermenu.gameObject);
-                    var done = false;
+    //     while (wait)
+    //     {
+    //         ///Disable onclick for characters while the WIllpower menu is up
+    //         ///If AttackPanelSub is visible - do not register anything underneath it as a click
+    //         List<RaycastResult>[] hits = IsSelectingWillpower();
 
-                    while (!done)
-                    {
-                        done = method(player, target);
-                        if (done)
-                        {
-                            wait = false;
-                        }
+    //         if(hits.Count > 0) {
+    //             foreach(var hit in hits){
+    //                 if(hit.gameObject.tag != "party"){
+    //                     Debug.Log("Name of object you clicked on: " + hit.gameObject.name);
 
-                    }
-                }
-            }
-        }
-        return true;
-    }
+    //                     var willMode = player.GetComponent<AllAttacks>().GetAttack(hit.gameObject.name);
+    //                     Destroy(willpowermenu.gameObject);
+    //                     var done = false;
 
+    //                     while (!done)
+    //                     {
+
+    //                         done = willMode(player, target);
+    //                         if (done)
+    //                         {
+    //                             wait = false;
+    //                         }
+
+    //                     }
+    //                 }
+    //             }
+
+    //         }
+
+    //         // ///Wait till option is chosen
+    //         // if (Input.GetMouseButtonDown(0))
+    //         // {
+    //         //     Vector2 ray = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    //         //     RaycastHit2D hit = Physics2D.Raycast(ray, Vector2.zero);
+    //         //     if (hit.collider)
+    //         //     {
+                    
+    //         //         Debug.Log("Name of object you clicked on: " + hit.collider.gameObject.name);
+
+
+    //         //         var willMode = player.GetComponent<AllAttacks>().GetAttack(hit.collider.gameObject.name);
+    //         //         Destroy(willpowermenu.gameObject);
+    //         //         var done = false;
+
+    //         //         while (!done)
+    //         //         {
+
+    //         //             done = willMode(player, target);
+    //         //             if (done)
+    //         //             {
+    //         //                 wait = false;
+    //         //             }
+
+    //         //         }
+    //         //     }
+    //         // }
+    //     }
+    //     return true;
+    // }
 
     ///Relationship stuff
     private float CalculateRelationship(string tactic, GameObject target)
