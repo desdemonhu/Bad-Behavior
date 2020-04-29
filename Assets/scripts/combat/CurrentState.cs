@@ -33,7 +33,9 @@ public class CurrentState : MonoBehaviour {
     public void LoadCombat(string combat, string scene, GameObject characters)
     {
         saveDataKey = scene;
-        SceneManager.LoadScene(combat, LoadSceneMode.Single);
+        SceneManager.LoadScene(combat, LoadSceneMode.Additive);
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(combat));
+
     }
     
 
@@ -81,11 +83,6 @@ public class CurrentState : MonoBehaviour {
 
     // Use this for initialization
     void OnLevelLoaded (Scene scene, LoadSceneMode mode) {
-
-        if (scene.name.StartsWith("Start"))
-        {
-            //FungusManager.Instance.SaveManager.Load("save_data");
-        }
 
         if (scene.name.StartsWith("Combat"))
         {
@@ -311,8 +308,10 @@ public class CurrentState : MonoBehaviour {
 
         //TODO: Set up experience menu
 
-        SceneManager.LoadScene("Start", LoadSceneMode.Single);
-        //FungusManager.Instance.SaveManager.Load("save_data");
+        SceneManager.UnloadSceneAsync("Combat-First");
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("Start"));
+        ///SceneManager.LoadScene("Start", LoadSceneMode.Single);
+        FungusManager.Instance.SaveManager.Load("save_data");
         //FungusManager.Instance.SaveManager.LoadSpecific("save_data", "AfterCombat");
 
     }
